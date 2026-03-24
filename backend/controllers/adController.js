@@ -5,7 +5,7 @@ export const getAds = async (req, res) => {
         const ads = await Ad.find({ active: true });
         res.json(ads);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message, stack: error.stack });
     }
 };
 
@@ -14,7 +14,7 @@ export const createAd = async (req, res) => {
         const ad = await Ad.create(req.body);
         res.status(201).json(ad);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message, stack: error.stack });
     }
 };
 
@@ -28,6 +28,6 @@ export const deleteAd = async (req, res) => {
             res.status(404).json({ message: 'Ad not found' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message, stack: error.stack });
     }
 };
