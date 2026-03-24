@@ -14,23 +14,13 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const data = await response.json();
-            if (response.ok) {
-                login(data);
-                if (data.role === 'admin') navigate('/admin');
-                else if (data.role === 'shopkeeper') navigate('/shopkeeper');
-                else navigate('/');
-            } else {
-                alert(data.message);
-            }
-        } catch (error) {
-            console.error('Login error:', error);
+        const data = await login(formData.email, formData.password);
+        if (data && !data.message) {
+            if (data.role === 'admin') navigate('/admin');
+            else if (data.role === 'shopkeeper') navigate('/shopkeeper');
+            else navigate('/');
+        } else if (data && data.message) {
+            alert(data.message);
         }
     };
 

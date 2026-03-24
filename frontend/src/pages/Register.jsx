@@ -14,21 +14,11 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await fetch('http://localhost:5000/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const data = await response.json();
-            if (response.ok) {
-                login(data);
-                navigate('/');
-            } else {
-                alert(data.message);
-            }
-        } catch (error) {
-            console.error('Registration error:', error);
+        const data = await register(formData);
+        if (data && !data.message) {
+            navigate('/');
+        } else if (data && data.message) {
+            alert(data.message);
         }
     };
 
