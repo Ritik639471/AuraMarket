@@ -1,0 +1,41 @@
+/* Container styling */
+.homeslider {
+  padding: 1rem 0;
+}
+
+/* Swiper slide wrapper */
+.sliderHome {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Slide item container */
+.homeslider .item {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Slide image styling */
+.homeslider .banner-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.homeslider .swiper-button-prev,
+.homeslider .swiper-button-next {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+}
+
+.homeslider .swiper-button-prev::after{
+  font-size: 29px;
+}
+
+.homeslider .swiper-button-next::after{
+  font-size: 29px;
+}

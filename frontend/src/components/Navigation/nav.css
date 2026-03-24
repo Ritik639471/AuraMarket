@@ -1,0 +1,155 @@
+/* Navigation Bar Styles */
+.navigation {
+  background: #ffffff;
+  padding: 0.5rem 0;
+}
+
+.navigation .col {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  width: 90%;
+  margin: auto;
+  gap: 2rem;
+}
+
+.navigation .col1,
+.navigation .col3 {
+  width: 20%;
+}
+
+.navigation .col2 {
+  width: 60%;
+}
+
+.navigation .category-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  font-size: 15px;
+  text-transform: capitalize;
+  color: black;
+}
+
+.navigation .dropdown-icon {
+  font-size: 17px;
+  margin-left: auto;
+  font-weight: bold;
+}
+
+.navigation .icon {
+  font-size: 18px;
+}
+
+.navigation .nav-list {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navigation .nav-item {
+  position: relative;
+  list-style: none;
+}
+
+.navigation .nav-button {
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  text-transform: capitalize !important;
+  color: rgba(0, 0, 0, 0.8) !important;
+  background: none !important;
+  transition: color 0.2s ease;
+}
+
+.navigation .nav-button:hover {
+  color: #ff5252 !important;
+}
+
+.navigation .delivery-note {
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.navigation .MuiBadge-badge {
+  background-color: #ff5252 !important;
+}
+
+/* Dropdown Styles */
+.navigation .dropdown {
+  position: relative;
+}
+
+.navigation .submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  background: #fff;
+  padding: 8px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 1000;
+}
+
+.navigation .dropdown:hover .submenu {
+  display: block;
+}
+
+.navigation .submenu-item {
+  position: relative;
+  padding: 8px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.navigation .submenu-title {
+  display: block;
+  color: black;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.navigation .submenu-title:hover {
+  color: #ff5252;
+}
+
+.navigation .inner-submenu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  min-width: 150px;
+  background: #fff;
+  padding: 8px 0;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+.navigation .submenu-item:hover .inner-submenu {
+  display: block;
+}
+
+.navigation .inner-submenu-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.navigation .inner-submenu-item:hover {
+  color: #ff5252;
+}
+
+/* Ensure all list items are reset */
+ul,li {
+  list-style: none;
+  z-index: 1000;
+}

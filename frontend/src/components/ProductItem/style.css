@@ -1,0 +1,139 @@
+.product-item {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.img-wrapper {
+  width: 100%;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.img-container {
+  height: 230px;
+  position: relative;
+  overflow: hidden;
+}
+
+.img-primary {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-hover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.img-wrapper:hover .img-hover {
+  opacity: 1;
+}
+
+.prod-discount {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff5252;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  z-index: 2;
+}
+
+.prod-actions {
+  position: absolute;
+  top: -200px;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.3s ease;
+  opacity: 0;
+  z-index: 2;
+}
+
+.img-wrapper:hover .prod-actions {
+  top: 15px;
+  opacity: 1;
+}
+
+.icon-btn {
+  width: 35px !important;
+  height: 35px !important;
+  min-width: 35px !important;
+  border-radius: 50%;
+  background-color: #fff !important;
+  color: #000 !important;
+  padding: 0 !important;
+}
+
+.icon {
+  font-size: 18px;
+  color: #000;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.icon-btn:hover {
+  background-color: #ff5252 !important;
+}
+
+.icon-btn:hover .icon {
+  color: #fff !important;
+}
+
+.product-desc {
+  padding: 0px 16px;
+  margin: 0;
+}
+
+.brand-name .brand-link{
+  font-size: 13px;
+  font-weight: 500;
+  color: #3e3e3e !important;
+  margin: 0;
+  padding: 0;
+}
+.product-name{
+  margin : 0 !important; 
+  padding : 0 !important;
+}
+.product-name .prod-link{
+  font-size: 13px;
+  font-weight: 550;
+  color: #000 !important;
+}
+.link:hover{
+  color:#ff5252 !important;
+}
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.prod-old-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.prod-new-price {
+  color: #ff5252;
+  font-size: 15px;
+  font-weight: 600;
+}

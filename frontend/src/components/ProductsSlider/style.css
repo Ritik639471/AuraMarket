@@ -1,0 +1,31 @@
+.product-slider-container {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.product-slider-container .swiper-wrapper {
+  padding: 0px;
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-bottom: 10px;
+}
+
+.product-swiper {
+  width: 100%;
+}
+
+
+.product-swiper .swiper-button-prev,
+.product-swiper .swiper-button-next {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+}
+
+.product-swiper .swiper-button-prev::after{
+  font-size: 27px;
+}
+
+.product-swiper .swiper-button-next::after{
+  font-size: 27px;
+}

@@ -1,0 +1,60 @@
+/* Slider Wrapper */
+.homecatslider {
+  overflow: visible;
+  padding: 1rem 0;
+}
+
+/* Container holding each category box */
+.cat-item {
+  padding: 1.75rem 0.75rem;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+/* Category icon */
+.cat-img {
+  width: 60px;
+  transition: transform 0.3s ease;
+}
+
+/* Category label */
+.cat-title {
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #000;
+}
+
+.cat-item:hover .cat-img {
+  transform: scale(1.1);
+}
+
+.homecatslider .swiper-button-prev,
+.homecatslider .swiper-button-next {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+}
+
+.homecatslider .swiper-button-prev::after{
+  font-size: 21px;
+}
+
+.homecatslider .swiper-button-next::after{
+  font-size: 21px;
+}
+
+.homecatslider .swiper-button-prev {
+  padding-left: -5px;
+}
+
+.homecatslider .swiper-button-next {
+  padding-right: -5px;
+}

@@ -1,0 +1,139 @@
+/* Section Layouts */
+.home-section {
+  padding: 0 0;
+  background-color: #fff;
+}
+
+.product-section {
+  padding: 1.25rem 0;
+  background-color: #fff;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 0 0 !important;
+}
+
+.section-desc {
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 5px;
+}
+
+.right {
+  width: 60%;
+}
+
+/* Shipping Banner */
+.shipping-banner {
+  width: 85%;
+  padding: 1rem;
+  margin: 0 auto;
+  border: 2px solid #ff5252;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.shipping-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.shipping-icon {
+  font-size: 50px;
+  color: #ff5252;
+}
+
+.shipping-title {
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.shipping-middle .shipping-note {
+  margin: 0;
+  font-weight: 500;
+}
+
+.shipping-price {
+  font-size: 25px;
+  font-weight: bold;
+  color: #000;
+}
+.MuiTabs-indicator {
+  background-color: #ff5252 !important;
+}
+
+.MuiTab-textColorPrimary.Mui-selected {
+  color: #ff5252 !important;
+}
+
+.container,
+.container-fluid {
+  width: 95%;
+  margin: 0 auto;
+}
+
+.latest-products,.featured-products{
+  padding: 0 0 !important;
+}
+
+.blog-section{
+  padding-top: 0 !important ;
+  padding-bottom: 2rem !important ;
+}
+
+.blog-section-title{
+  margin-bottom: 16px !important;
+}
+
+.blog-section .swiper-button-prev,
+.blog-section .swiper-button-next {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+}
+
+.blog-section .swiper-button-prev::after{
+  font-size: 23px;
+}
+.blog-section .swiper-button-next::after{
+  font-size: 23px;
+}
+
+.container-slider2{
+  display: flex;
+  align-items: center;
+}
+.home-section-slider2{
+  padding: 16px 50px;
+  background: #fff;
+}
+.container-slider2{
+  display: flex;
+  align-items: center;
+}
+.container-slider2 .part1{
+  width: 70%;
+}
+.container-slider2 .part2{
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  flex-direction: column;
+  gap: 16px;
+}

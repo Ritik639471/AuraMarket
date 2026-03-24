@@ -1,0 +1,19 @@
+.ads-banner-slider {
+  padding: 20px 0;
+  width: 100%;
+}
+
+.ads-swiper .swiper-button-prev,
+.ads-swiper .swiper-button-next {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+}
+
+.ads-swiper .swiper-button-prev::after{
+  font-size: 22px;
+}
+
+.ads-swiper .swiper-button-next::after{
+  font-size: 22px;
+}

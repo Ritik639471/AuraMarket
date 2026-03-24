@@ -1,0 +1,148 @@
+.product-list-item {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  display: flex;
+}
+
+.product-list-item .img-wrapper {
+  width: 36%;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-list-item .img-container {
+  height: 262px;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-list-item .img-primary {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-list-item .img-hover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.product-list-item .img-wrapper:hover .img-hover {
+  opacity: 1;
+}
+
+.product-list-item .prod-discount {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff5252;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  z-index: 2;
+}
+
+.product-list-item .prod-actions {
+  width: 100%;
+  position: absolute;
+  top: -200px;
+  right: -160px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.3s ease;
+  opacity: 0;
+  z-index: 2;
+}
+
+.product-list-item .img-wrapper:hover .prod-actions {
+  top: 15px;
+  opacity: 1;
+}
+
+.product-list-item .icon-btn {
+  width: 35px !important;
+  height: 35px !important;
+  min-width: 35px !important;
+  border-radius: 50%;
+  background-color: #fff !important;
+  color: #000 !important;
+  padding: 0 !important;
+}
+
+.product-list-item .icon {
+  font-size: 18px;
+  color: #000;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.product-list-item .icon-btn:hover {
+  background-color: #ff5252 !important;
+}
+
+.product-list-item .icon-btn:hover .icon {
+  color: #fff !important;
+}
+
+.product-list-item .product-desc {
+  padding: 0;
+  margin-left:25px;
+}
+
+.product-list-item .brand-name .brand-link{
+  font-size: 16px;
+  font-weight: 500;
+  color: #3e3e3e !important;
+  margin: 0;
+  padding: 0;
+}
+.product-list-item .product-name{
+  margin : 0 !important; 
+  padding: 0 !important;
+}
+.product-list-item .product-name .prod-link{
+  font-size: 18px;
+  font-weight: 550;
+  color: #000 !important;
+}
+.product-list-item .link:hover{
+  color:#ff5252 !important;
+}
+.product-list-item .product-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.product-list-item .prod-old-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 20px;
+  font-weight: 500;
+  padding-bottom: 10px;
+}
+
+.product-list-item .brand-name{
+  margin-block-end:5px;
+  margin-block-start:10px;
+}
+.product-list-item .prod-new-price {
+  color: #ff5252;
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 15px;
+}

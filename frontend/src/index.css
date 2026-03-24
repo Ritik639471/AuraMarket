@@ -1,0 +1,104 @@
+
+/* Custom styles */
+.container {
+  width: 90%;
+  margin: auto;
+}
+
+body {
+  font-family: "Saira", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  color:#666;
+  font-variation-settings: "wdth" 100;
+  background: #f5f0f0;
+  overflow-x: hidden;
+}
+
+header .top-strip {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+::-webkit-scrollbar-thumb {
+  background: #ff5252;
+}
+.link{
+  text-decoration: none ;
+}
+.link:hover{
+  color:#ff5252 !important;
+}
+.sliderHome{
+  overflow: inherit !important;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover{
+  color: #ffffff !important;
+  background-color: #ff5252 !important;
+}
+.swiper-button-prev,
+.swiper-button-next{
+  border-radius: 50%;
+  top: 55% !important;
+  background: #ffffffdb ;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.swiper-button-prev::after,
+.swiper-button-next::after{
+  font-weight: 700;
+}
+
+.swiper-button-prev::after{
+  padding-right: 4px;
+}
+.swiper-button-next::after{
+  padding-left: 4px;
+}
+
+.swiper-pagination-bullet-active{
+  background: #ff5252 !important;
+}
+
+:root{--swiper-theme-color: #000000c3 !important;}
+
+.btn:hover {
+  background: #c00404 !important;
+  color: #fff !important;
+}
+.btn {
+  background: #ff5252 !important;
+  color: #fff !important;
+}
+.MuiCheckbox-root {
+  padding: 6px !important;
+}
+.ReactCollapse--collapse {
+  transition: height 500ms;
+}
+.range-slider{height: 3px !important;}
+.range-slider .range-slider__thumb{width: 14px !important;height: 14px !important;}
+.range-slider .range-slider__thumb,.range-slider .range-slider__range{background: #ff5252 !important;}
+.Mui-selected.MuiPaginationItem-page{
+  background: #ff5252 !important;
+  color: #fff !important;
+}
+span.iiz__btn.iiz__hint{
+  width: 25px !important;
+  height: 25px !important;
+  min-height: 25px !important;
+  border-radius: 50%;
+}
+span.iiz__btn.iiz__hint::before{
+  width: 16px !important;
+  height: 16px !important;
+}
