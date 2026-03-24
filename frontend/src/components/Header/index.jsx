@@ -49,8 +49,12 @@ const Header = () => {
 
       <div className="header-main">
         <div className="container header-container">
-          <div className="logo">
-            <Link to={"/"}><img src="src\assets\logo.png" /></Link>
+          <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Link to={"/"} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+              <img src="/src/assets/logo_aura.png" style={{ height: '45px', borderRadius: '8px' }} alt="AuraMarket" />
+              <span style={{ fontSize: '24px', fontWeight: 800, color: '#2b3445', marginLeft: '10px', fontStyle: 'italic', letterSpacing: '1px' }}>AURA</span>
+              <span style={{ fontSize: '24px', fontWeight: 400, color: '#ff5252' }}>MARKET</span>
+            </Link>
           </div>
           <div className="search-box"><Search /></div>
           <div className="header-icons">

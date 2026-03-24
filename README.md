@@ -7,7 +7,7 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-# Shopping App - Modernized Full-Stack Platform
+# AuraMarket - Modernized Full-Stack Platform
 
 ## 🚀 Getting Started
 
@@ -36,6 +36,15 @@ node seed.js
 - **Admin**: `admin@example.com` / `admin123`
 - **Shopkeeper**: `shop@example.com` / `shop123`
 - **Customer**: `user@example.com` / `user123`
+
+## 🔧 Troubleshooting Git Push
+If you see an error like `fatal: 'origin' does not appear to be a git repository`, run these commands:
+```bash
+git remote add origin https://github.com/YOUR_USERNAME/auramarket.git
+git branch -M main
+git push -u origin main
+```
+*(Replace the URL with your actual GitHub repository URL)*
 
 ## Expanding the ESLint configuration
 

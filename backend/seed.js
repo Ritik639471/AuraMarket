@@ -9,7 +9,7 @@ dotenv.config();
 
 const seedData = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/shopping-app');
+        await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/auramarket');
         
         // Clear existing data
         await User.deleteMany();

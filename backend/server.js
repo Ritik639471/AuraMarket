@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 // Database Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/shopping-app')
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/auramarket')
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('Error connecting to MongoDB:', err));
 
