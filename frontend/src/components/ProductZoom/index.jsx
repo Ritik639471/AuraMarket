@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import InnerImageZoom from "react-inner-image-zoom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -14,10 +14,10 @@ const ProductZoom = ({ image }) => {
         "https://images.unsplash.com/photo-1517336714468-450583ad716d?auto=format&fit=crop&q=80&w=300",
         "https://images.unsplash.com/photo-1517336714468-450583ad716d?auto=format&fit=crop&q=80&w=300"
     ];
-    const [selectedImage, setSelectedImage] = React.useState(images[0]);
-    const imgk = React.useRef(null);
+    const [selectedImage, setSelectedImage] = useState(images[0]);
+    const imgk = useRef(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (image) setSelectedImage(image);
     }, [image]);
 

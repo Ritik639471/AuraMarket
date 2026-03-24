@@ -1,4 +1,6 @@
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Breadcrumbs, Link, Rating } from '@mui/material';
 import ProductZoom from "../../components/ProductZoom";
 
 const API_URL = import.meta.env.VITE_API_URL || '';
@@ -7,9 +9,9 @@ import "./style.css";
 
 const ProductDetails = () => {
     const { id } = useParams();
-    const [product, setProduct] = React.useState(null);
+    const [product, setProduct] = useState(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         fetch(`${API_URL}/api/products/${id}`)
             .then(res => res.json())
             .then(data => setProduct(data));

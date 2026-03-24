@@ -7,9 +7,11 @@ import { FaRegHeart } from "react-icons/fa";
 import { MdZoomOutMap } from "react-icons/md";
 import "./style.css";
 import { useWishlist } from "../../context/WishlistContext";
+import { useCart } from "../../context/CartContext";
 
 const ProductItem = ({ product }) => {
   const { wishlist, toggleWishlist } = useWishlist();
+  const { addToCart } = useCart();
   if (!product) return null;
 
   const isInWishlist = wishlist.some(item => (item._id || item) === product._id);
@@ -54,6 +56,14 @@ const ProductItem = ({ product }) => {
         <div className="product-price">
           <span className="prod-new-price">${product.price}</span>
         </div>
+        <Button 
+          variant="contained" 
+          fullWidth 
+          sx={{ mt: 1, backgroundColor: '#ff5252', '&:hover': { backgroundColor: '#e34e4e' } }}
+          onClick={() => addToCart(product)}
+        >
+          Add to Cart
+        </Button>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import Navigation from '../Navigation';
 import './header.css'
 import { useAuth } from '../../context/AuthContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useCart } from '../../context/CartContext';
 import { Button } from '@mui/material';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -29,6 +30,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 const Header = () => {
     const { user, logout } = useAuth();
     const { wishlist } = useWishlist();
+    const { cart } = useCart();
     return (
     <header className="header">
       <div className="top-strip">
@@ -61,6 +63,7 @@ const Header = () => {
             <ul className="icon-links">
               {user ? (
                 <>
+                  {user.role === 'customer' && <li><Link to="/myorders" className='nav-link'>My Orders</Link></li>}
                   <li><Link to={user.role === 'admin' ? "/admin" : user.role === 'shopkeeper' ? "/shopkeeper" : "/"} className='nav-link'>Dashboard</Link></li>
                   <li><Button onClick={logout} className='nav-link' sx={{ textTransform: 'none', color: 'inherit', p: 0 }}>Logout</Button></li>
                 </>
@@ -90,8 +93,8 @@ const Header = () => {
               </li>
               <li>
                 <Tooltip title="Cart">
-                  <IconButton aria-label="cart">
-                    <StyledBadge badgeContent={4} color="secondary">
+                  <IconButton aria-label="cart" component={Link} to="/cart">
+                    <StyledBadge badgeContent={cart.length} color="secondary">
                       <ShoppingCartIcon />
                     </StyledBadge>
                   </IconButton>

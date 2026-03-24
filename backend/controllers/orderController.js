@@ -1,4 +1,5 @@
 import Order from '../models/Order.js';
+import Product from '../models/Product.js';
 
 export const createOrder = async (req, res) => {
     const { items, totalAmount, shippingAddress } = req.body;
@@ -24,10 +25,17 @@ export const getMyOrders = async (req, res) => {
 
 export const getShopkeeperOrders = async (req, res) => {
     try {
-        // Find orders containing products belonging to this shopkeeper
-        const orders = await Order.find({
-            'items.product': { $in: await Product.find({ shopkeeper: req.user._id }).distinct('_id') }
-        }).populate('items.product').populate('customer', 'name email');
+        let filter = {};
+        if (req.user.role !== 'admin') {
+            const productIds = await Product.find({ shopkeeper: req.user._id }).distinct('_id');
+            filter = { 'items.product': { $in: productIds } };
+        }
+        
+        const orders = await Order.find(filter)
+            .populate('items.product')
+            .populate('customer', 'name email')
+            .sort({ createdAt: -1 });
+            
         res.json(orders);
     } catch (error) {
         res.status(500).json({ message: error.message });

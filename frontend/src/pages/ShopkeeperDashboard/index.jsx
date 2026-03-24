@@ -12,15 +12,21 @@ const ShopkeeperDashboard = () => {
     const [products, setProducts] = useState([]);
     const [orders, setOrders] = useState([]);
     const [open, setOpen] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const [newProduct, setNewProduct] = useState({ name: '', description: '', price: '', category: '', image: '', stock: '' });
+
+    const fetchProducts = () => {
+        fetch(`${API_URL}/api/products/shopkeeper`, {
+            headers: { 'Authorization': `Bearer ${user.token}` }
+        })
+            .then(res => res.json())
+            .then(data => setProducts(data));
+    };
 
     useEffect(() => {
         if (user) {
-            fetch(`${API_URL}/api/products/shopkeeper`, {
-                headers: { 'Authorization': `Bearer ${user.token}` }
-            })
-                .then(res => res.json())
-                .then(data => setProducts(data));
+            fetchProducts();
 
             fetch(`${API_URL}/api/orders/shopkeeper`, {
                 headers: { 'Authorization': `Bearer ${user.token}` }
@@ -32,8 +38,11 @@ const ShopkeeperDashboard = () => {
 
     const handleAddProduct = async (e) => {
         e.preventDefault();
-        const res = await fetch(`${API_URL}/api/products`, {
-            method: 'POST',
+        const method = editMode ? 'PUT' : 'POST';
+        const url = editMode ? `${API_URL}/api/products/${selectedProduct._id}` : `${API_URL}/api/products`;
+        
+        const res = await fetch(url, {
+            method,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${user.token}`
@@ -42,13 +51,33 @@ const ShopkeeperDashboard = () => {
         });
         if (res.ok) {
             setOpen(false);
-            // refresh products
-            fetch(`${API_URL}/api/products/shopkeeper`, {
-                headers: { 'Authorization': `Bearer ${user.token}` }
-            })
-                .then(res => res.json())
-                .then(data => setProducts(data));
+            setEditMode(false);
+            setSelectedProduct(null);
+            setNewProduct({ name: '', description: '', price: '', category: '', image: '', stock: '' });
+            fetchProducts();
         }
+    };
+
+    const handleDeleteProduct = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this product?')) return;
+        const res = await fetch(`${API_URL}/api/products/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${user.token}` }
+        });
+        if (res.ok) fetchProducts();
+    };
+
+    const handleEditClick = (p) => {
+        setSelectedProduct(p);
+        setNewProduct({ name: p.name, description: p.description, price: p.price, category: p.category, image: p.image, stock: p.stock });
+        setEditMode(true);
+        setOpen(true);
+    };
+
+    const handleOpenAdd = () => {
+        setEditMode(false);
+        setNewProduct({ name: '', description: '', price: '', category: '', image: '', stock: '' });
+        setOpen(true);
     };
 
     const handleStatusUpdate = async (id, status, paymentStatus) => {
@@ -85,7 +114,7 @@ const ShopkeeperDashboard = () => {
                         <Button 
                             variant="contained" 
                             startIcon={<Add />} 
-                            onClick={() => setOpen(true)} 
+                            onClick={handleOpenAdd} 
                             sx={{ mb: 3, borderRadius: '10px', px: 4 }}
                         >
                             Add New Product
@@ -102,6 +131,7 @@ const ShopkeeperDashboard = () => {
                                     <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
                                     <TableCell sx={{ fontWeight: 600 }}>Price</TableCell>
                                     <TableCell sx={{ fontWeight: 600 }}>Stock</TableCell>
+                                    <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -110,6 +140,12 @@ const ShopkeeperDashboard = () => {
                                         <TableCell>{p.name}</TableCell>
                                         <TableCell sx={{ color: 'primary.main', fontWeight: 600 }}>${p.price}</TableCell>
                                         <TableCell>{p.stock}</TableCell>
+                                        <TableCell>
+                                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                                <Button size="small" variant="text" onClick={() => handleEditClick(p)}>Edit</Button>
+                                                <Button size="small" variant="text" color="error" onClick={() => handleDeleteProduct(p._id)}>Delete</Button>
+                                            </Box>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -139,7 +175,16 @@ const ShopkeeperDashboard = () => {
                                 {orders.map((o) => (
                                     <TableRow key={o._id} sx={{ '&:hover': { backgroundColor: 'rgba(0,0,0,0.02)' } }}>
                                         <TableCell sx={{ fontWeight: 500 }}>#{o._id.substring(18)}</TableCell>
-                                        <TableCell>{o.customer?.name}</TableCell>
+                                        <TableCell>
+                                            <Typography variant="body2" sx={{ fontWeight: 600 }}>{o.customer?.name}</Typography>
+                                            <Box sx={{ mt: 1 }}>
+                                                {o.items.map((item, idx) => (
+                                                    <Typography key={idx} variant="caption" display="block">
+                                                        • {item.product?.name} (x{item.quantity})
+                                                    </Typography>
+                                                ))}
+                                            </Box>
+                                        </TableCell>
                                         <TableCell>
                                             <Box sx={{ 
                                                 display: 'inline-block', 
@@ -172,7 +217,7 @@ const ShopkeeperDashboard = () => {
             </Container>
 
             <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogTitle>Add New Product</DialogTitle>
+                <DialogTitle>{editMode ? 'Edit Product' : 'Add New Product'}</DialogTitle>
                 <DialogContent>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
                         <TextField label="Name" fullWidth value={newProduct.name} onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} />
@@ -185,7 +230,7 @@ const ShopkeeperDashboard = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button onClick={handleAddProduct} variant="contained">Add</Button>
+                    <Button onClick={handleAddProduct} variant="contained">{editMode ? 'Update' : 'Add'}</Button>
                 </DialogActions>
             </Dialog>
         </Box>

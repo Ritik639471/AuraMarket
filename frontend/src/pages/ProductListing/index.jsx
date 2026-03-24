@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import ProductItem from "../../components/ProductItem";
@@ -12,26 +12,33 @@ import Pagination from '@mui/material/Pagination';
 import "./style.css";
 import SideBar from "../../components/SideBar";
 import { Button, capitalize } from "@mui/material";
+import { useSearchParams } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 const ProductListing = () => {
-    const [ItemView, setItemView] = React.useState('grid');
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [products, setProducts] = React.useState([]);
-    const [filteredProducts, setFilteredProducts] = React.useState([]);
-    const [sort, setSort] = React.useState('Name, A-Z');
-    const [filters, setFilters] = React.useState({ categories: [], priceRange: [0, 10000], rating: null });
+    const [ItemView, setItemView] = useState('grid');
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [sort, setSort] = useState('Name, A-Z');
+    const [filters, setFilters] = useState({ categories: [], priceRange: [0, 10000], rating: null });
+    const [searchParams] = useSearchParams();
+    const searchQuery = searchParams.get('search');
     
-    React.useEffect(() => {
-        fetch(`${API_URL}/api/products`)
+    useEffect(() => {
+        const url = searchQuery 
+            ? `${API_URL}/api/products/search?q=${searchQuery}`
+            : `${API_URL}/api/products`;
+            
+        fetch(url)
             .then(res => res.json())
             .then(data => {
                 setProducts(data);
                 setFilteredProducts(data);
             })
             .catch(err => console.error('ProductListing Fetch Error:', err));
-    }, []);
+    }, [searchQuery]);
 
     React.useEffect(() => {
         let result = [...products];

@@ -50,9 +50,9 @@ const Footer = () => {
 
                     <div className="footer-bottom">
                         <div className='footer-bottom-p1'>
-                            <h2 className='footer-title'>Contact Us</h2>
-                            <p className='footer-desc'>Classyshop - Mega Super Store<br />
-                                507-Union Trade Centre France</p>
+                            <h2 className='footer-title' style={{ color: '#ff5252', fontWeight: 800 }}>AURA MARKET</h2>
+                            <p className='footer-desc'>AuraMarket - Premium E-commerce Store<br />
+                                123 Luxury Lane, Fashion Avenue, NY</p>
                             <Link className="link footer-desc" to="mailto:someone@example.com">
                                 sales@yourcompany.com
                             </Link>
@@ -160,7 +160,7 @@ const Footer = () => {
                         </li>
                     </ul>
 
-                    <p className='right-text'>© 2024 - Ecommerce Template. All rights reserved.</p>
+                    <p className='right-text'>© 2024 - AuraMarket. All rights reserved.</p>
 
                     <div className='card-supported'>
                         <img src="/image/card1.png" alt="image" className="card-img" />

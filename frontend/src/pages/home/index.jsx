@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./style.css";
 import HomeSlider from "../../components/HomeSlider";
 import HomeCatSlider from "../../components/HomeCatSlider";
@@ -20,11 +20,11 @@ import 'swiper/css/navigation';
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 const Home = () => {
-  const [value, setValue] = React.useState(0);
-  const [products, setProducts] = React.useState([]);
-  const [ads, setAds] = React.useState([]);
+  const [value, setValue] = useState(0);
+  const [products, setProducts] = useState([]);
+  const [ads, setAds] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetch(`${API_URL}/api/products`)
       .then(res => res.json())
       .then(data => setProducts(data))
