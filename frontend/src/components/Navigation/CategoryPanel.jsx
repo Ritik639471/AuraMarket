@@ -5,7 +5,6 @@ import Drawer from '@mui/material/Drawer';
 import { MdClose } from "react-icons/md";
 import { Divider } from '@mui/material';
 import CategoryCollapse from '../CategoryCollapse';
-import './panel.css';
 
 const CategoryPanel = (props) => {
   const toggleDrawer = (newOpen) => () => {
@@ -13,13 +12,13 @@ const CategoryPanel = (props) => {
   };
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" className="categoryPanel">
-      <h3 className="category-title">
+    <Box sx={{ width: 250 }} role="presentation" className="w-full">
+      <h3 className="p-3 text-[16px] font-medium flex justify-between items-center">
         Shop by Categories
-        <MdClose onClick={toggleDrawer(false)} className="icon-btn" />
+        <MdClose onClick={toggleDrawer(false)} className="text-[20px] cursor-pointer" />
       </h3>
       <Divider />
-      <div className="scroll">
+      <div className="max-h-[80vh] overflow-y-auto">
         <CategoryCollapse />
       </div>
     </Box>

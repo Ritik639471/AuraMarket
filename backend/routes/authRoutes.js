@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, getCart, addToCart, removeFromCart, getAllUsers, updateUserRole, deleteUser } from '../controllers/authController.js';
+import { registerUser, loginUser, getCart, addToCart, removeFromCart, updateCartQuantity, clearCart, getAllUsers, updateUserRole, deleteUser } from '../controllers/authController.js';
 import { protect, authorize } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -10,6 +10,8 @@ router.post('/login', loginUser);
 // Cart routes
 router.get('/cart', protect, getCart);
 router.post('/cart', protect, addToCart);
+router.put('/cart', protect, updateCartQuantity);
+router.delete('/cart', protect, clearCart);
 router.delete('/cart/:productId', protect, removeFromCart);
 
 // Admin User Management

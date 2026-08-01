@@ -7,8 +7,6 @@ import 'react-range-slider-input/dist/style.css';
 import Rating from '@mui/material/Rating';
 import {Button} from "@mui/material";
 
-import "./style.css";
-
 const categoryData = [
     {
         name: "Fashion",
@@ -67,17 +65,17 @@ const SideBar = ({ onCategoryChange, onPriceChange, onRatingChange }) => {
 
 
     return (
-        <aside className="sidebar">
-            <div className="siebar-header">
-                <h3 className="sidebar-title">
+        <aside className="w-full">
+            <div className="mb-4">
+                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
                     Shop By Category
-                    <button className="close-btn" onClick={()=> setIsOpenedCategory(!isOpenedCategory)}>
+                    <button className="w-[30px] h-[30px] min-w-[30px] text-[18px] border-none bg-white font-semibold text-black cursor-pointer flex items-center justify-center" onClick={()=> setIsOpenedCategory(!isOpenedCategory)}>
                         {!isOpenedCategory ? <LiaAngleDownSolid  />:
                         <LiaAngleUpSolid />}
                     </button>
                 </h3>
                 <Collapse isOpened={isOpenedCategory}>
-                    <div className="category-scroll">
+                    <div className="flex flex-col max-w-[60%] pl-5 max-h-[200px] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:w-[5px] [&::-webkit-scrollbar-thumb]:bg-[#ccc] [&::-webkit-scrollbar-thumb]:rounded-full">
                         {["Fashion", "Electronics", "Bags", "Footwears", "Groceries", "Beauty", "Wellness", "Jewellery", "Home Decor"].map(cat => (
                             <FormControlLabel 
                                 key={cat}
@@ -88,32 +86,32 @@ const SideBar = ({ onCategoryChange, onPriceChange, onRatingChange }) => {
                     </div>
                 </Collapse>
             </div>
-            <div className="siebar-header">
-                <h3 className="sidebar-title">
+            <div className="mb-4">
+                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
                     Availability
-                    <button className="close-btn" onClick={()=> setIsOpenedAvail(!isOpenedAvail)}>
+                    <button className="w-[30px] h-[30px] min-w-[30px] text-[18px] border-none bg-white font-semibold text-black cursor-pointer flex items-center justify-center" onClick={()=> setIsOpenedAvail(!isOpenedAvail)}>
                         {!isOpenedAvail ? <LiaAngleDownSolid  />:
                         <LiaAngleUpSolid />}
                     </button>
                 </h3>
                 <Collapse isOpened={isOpenedAvail}>
-                    <div className="category-scroll">
+                    <div className="flex flex-col max-w-[60%] pl-5 max-h-[200px] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:w-[5px] [&::-webkit-scrollbar-thumb]:bg-[#ccc] [&::-webkit-scrollbar-thumb]:rounded-full">
                         <FormControlLabel control={<Checkbox size="small" />} label="Available" />
                         <FormControlLabel control={<Checkbox size="small" />} label="Out of Stock" />
                         <FormControlLabel control={<Checkbox size="small" />} label="Coming Soon" />
                     </div>
                 </Collapse>
             </div>
-            <div className="siebar-header">
-                <h3 className="sidebar-title">
+            <div className="mb-4">
+                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
                     Size
-                    <button className="close-btn" onClick={()=> setIsOpenedSize(!isOpenedSize)}>
+                    <button className="w-[30px] h-[30px] min-w-[30px] text-[18px] border-none bg-white font-semibold text-black cursor-pointer flex items-center justify-center" onClick={()=> setIsOpenedSize(!isOpenedSize)}>
                         {!isOpenedSize ? <LiaAngleDownSolid  />:
                         <LiaAngleUpSolid />}
                     </button>
                 </h3>
                 <Collapse isOpened={isOpenedSize}>
-                    <div className="category-scroll">
+                    <div className="flex flex-col max-w-[60%] pl-5 max-h-[200px] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:w-[5px] [&::-webkit-scrollbar-thumb]:bg-[#ccc] [&::-webkit-scrollbar-thumb]:rounded-full">
                         <FormControlLabel control={<Checkbox size="small" />} label="Small" />
                         <FormControlLabel control={<Checkbox size="small" />} label="Medium" />
                         <FormControlLabel control={<Checkbox size="small" />} label="Large" />
@@ -122,25 +120,25 @@ const SideBar = ({ onCategoryChange, onPriceChange, onRatingChange }) => {
                     </div>
                 </Collapse>
             </div>
-            <div className="siebar-header">
-                <h3 className="sidebar-title">
+            <div className="mb-4">
+                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
                     Filter By Price
                 </h3>
-                <RangeSlider onInput={setPriceRange} onThumbDragEnd={() => onPriceChange && onPriceChange(priceRange)} />
-                <div className="filter-detail">
-                    <span className="price-min">
-                        From: <strong className="text-dark">Rs:{priceRange[0]}</strong>
+                <RangeSlider min={0} max={5000} value={priceRange} onInput={setPriceRange} onThumbDragEnd={() => onPriceChange && onPriceChange(priceRange)} />
+                <div className="flex pt-4 pb-2">
+                    <span className="text-[14px]">
+                        From: <strong className="text-gray-900">Rs:{priceRange[0]}</strong>
                     </span>
-                    <span className="price-max">
-                        To: <strong className="text-dark">Rs:{priceRange[1]}</strong>
+                    <span className="ml-auto text-[14px]">
+                        To: <strong className="text-gray-900">Rs:{priceRange[1]}</strong>
                     </span>
                 </div>
             </div>
-            <div className="siebar-header">
-                <h3 className="sidebar-title">
+            <div className="mb-4">
+                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
                     Filter By Rating
                 </h3>
-                <div className="rating-wrapper">
+                <div className="w-full flex gap-4 flex-col">
                     {[5, 4, 3, 2, 1].map(r => (
                         <div key={r} style={{ cursor: 'pointer' }} onClick={() => onRatingChange && onRatingChange(r)}>
                             <Rating name={`rating-${r}`} defaultValue={r} size="small" readOnly />

@@ -1,5 +1,4 @@
 import React from "react";
-import "./style.css";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
@@ -22,19 +21,19 @@ const HomeSliderV2 = () => {
                 delay: 2500,
                 disableOnInteraction: false,
             }}
-            className="home-slider-v2"
+            className="w-full [&_.swiper-button-prev]:w-[35px] [&_.swiper-button-prev]:h-[35px] [&_.swiper-button-prev]:min-w-[35px] [&_.swiper-button-prev]:after:text-[26px] [&_.swiper-button-next]:w-[35px] [&_.swiper-button-next]:h-[35px] [&_.swiper-button-next]:min-w-[35px] [&_.swiper-button-next]:after:text-[26px]"
         >
             <SwiperSlide>
-                <div className='item'>
-                    <img src="https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg" alt="slide1" />
-                    <div className='banner-detail-info'>
-                        <h4 className='banner-title-info animate-title'>Big Saving Days Sale</h4>
-                        <h2 className="banner-title-main animate-subtitle">Women solid Round Green T-Shirt</h2>
-                        <h3 className="banner-title-info price animate-price">
+                <div className='rounded-[5px] overflow-hidden relative w-full h-[450px]'>
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80" alt="slide1" className="w-full h-full object-cover block" loading="lazy" decoding="async" />
+                    <div className='w-[44%] h-full flex flex-col items-center justify-center absolute top-0 right-0 px-8 z-50'>
+                        <h4 className='w-full m-0 text-[20px] font-medium mb-3 animate-title text-white bg-black/50 p-2 rounded'>Big Saving Days Sale</h4>
+                        <h2 className="w-full m-0 text-[45px] font-bold mb-3 animate-subtitle text-white bg-black/50 p-2 rounded">Women solid Round Green T-Shirt</h2>
+                        <h3 className="w-full m-0 text-[20px] font-medium mb-3 flex items-center animate-price text-white bg-black/50 p-2 rounded">
                             Starting at Only
-                            <span className="banner-price-info">$59.00</span>
+                            <span className="text-[#ff5252] text-[30px] font-bold ml-3">$59.00</span>
                         </h3>
-                        <div className="banner-btn animate-btn">
+                        <div className="mt-3 w-full animate-btn">
                             <Button className="btn" variant="contained">
                                 Shop Now
                             </Button>
@@ -44,16 +43,16 @@ const HomeSliderV2 = () => {
             </SwiperSlide>
 
             <SwiperSlide>
-                <div className='item'>
-                    <img src="https://serviceapi.spicezgold.com/download/1742441193376_1737037654953_New_Project_45.jpg" alt="slide2" />
-                    <div className='banner-detail-info'>
-                        <h4 className='banner-title-info animate-title'>Big Saving Days Sale</h4>
-                        <h2 className="banner-title-main animate-subtitle">Apple iPhone 13 128 GB, Grey</h2>
-                        <h3 className="banner-title-info price animate-price">
+                <div className='rounded-[5px] overflow-hidden relative w-full h-[450px]'>
+                    <img src="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&q=80" alt="slide2" className="w-full h-full object-cover block" loading="lazy" decoding="async" />
+                    <div className='w-[44%] h-full flex flex-col items-center justify-center absolute top-0 right-0 px-8 z-50'>
+                        <h4 className='w-full m-0 text-[20px] font-medium mb-3 animate-title text-white bg-black/50 p-2 rounded'>Big Saving Days Sale</h4>
+                        <h2 className="w-full m-0 text-[45px] font-bold mb-3 animate-subtitle text-white bg-black/50 p-2 rounded">Apple iPhone 13 128 GB, Grey</h2>
+                        <h3 className="w-full m-0 text-[20px] font-medium mb-3 flex items-center animate-price text-white bg-black/50 p-2 rounded">
                             Starting at Only
-                            <span className="banner-price-info">$559.00</span>
+                            <span className="text-[#ff5252] text-[30px] font-bold ml-3">$559.00</span>
                         </h3>
-                        <div className="banner-btn animate-btn">
+                        <div className="mt-3 w-full animate-btn">
                             <Button className="btn" variant="contained">
                                 Shop Now
                             </Button>

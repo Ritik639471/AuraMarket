@@ -116,6 +116,28 @@ export const addToCart = async (req, res) => {
     }
 };
 
+export const updateCartQuantity = async (req, res) => {
+    const { productId, quantity } = req.body;
+    try {
+        const user = await User.findById(req.user._id);
+        const cartItemIdx = user.cart.findIndex(item => item.product.toString() === productId);
+        
+        if (cartItemIdx > -1) {
+            if (quantity <= 0) {
+                user.cart.splice(cartItemIdx, 1);
+            } else {
+                user.cart[cartItemIdx].quantity = quantity;
+            }
+        }
+        
+        await user.save();
+        const updatedUser = await User.findById(req.user._id).populate('cart.product');
+        res.json(updatedUser.cart);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 export const removeFromCart = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
@@ -123,6 +145,17 @@ export const removeFromCart = async (req, res) => {
         await user.save();
         const updatedUser = await User.findById(req.user._id).populate('cart.product');
         res.json(updatedUser.cart);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const clearCart = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        user.cart = [];
+        await user.save();
+        res.json([]);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

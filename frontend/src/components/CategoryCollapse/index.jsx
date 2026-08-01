@@ -1,54 +1,22 @@
-// CategoryList.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 import { FaRegSquarePlus, FaRegSquareMinus } from "react-icons/fa6";
-import { Link } from 'react-router-dom';
-import './style.css'
+import { Link, useNavigate } from 'react-router-dom';
+
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 const CategoryCollapse = () => {
-  const categoryData = [
-    {
-      name: "Fashion",
-      subcategories: [
-        { name: "Women", items: ["Sarees", "Tops", "Jeans"] },
-        { name: "Girls", items: ["Kurtas & Suits", "Tops"] },
-        { name: "Children", items: ["T-shirt", "Jeans", "Kurtis", "Lower & Pants"] },
-        { name: "Men", items: ["Jeans", "Formal", "T-shirt"] },
-      ]
-    },
-    {
-      name: "Electronics",
-      subcategories: [
-        { name: "Laptops", items: ["Lenovo", "Asus", "Dell", "MAC"] },
-        { name: "Smart Watch", items: ["Samsung", "Apple", "OnePlus", "Fitbit"] },
-        { name: "Mobile", items: ["Apple", "Samsung", "OPPO", "Vivo", "OnePlus"] },
-      ]
-    },
-    {
-      name: "Bags",
-      subcategories: [
-        { name: "Men Bags", items: [] },
-        { name: "Women Bags", items: [] },
-        { name: "Kids Bags", items: [] },
-      ]
-    },
-    {
-      name: "Footwears",
-      subcategories: [
-        { name: "Men", items: [] },
-        { name: "Women", items: [] },
-        { name: "Kids", items: [] },
-      ]
-    },
-    { name: "Groceries", subcategories: [] },
-    { name: "Beauty", subcategories: [] },
-    { name: "Wellness", subcategories: [] },
-    { name: "Jewellery", subcategories: [] },
-    { name: "Home Decor", subcategories: [] },
-  ];
+  const [categoryData, setCategoryData] = useState([]);
+  const [submenuIndex, setSubmenuIndex] = useState(null);
+  const [innerSubmenu, setInnerSubmenu] = useState({});
+  const navigate = useNavigate();
 
-  const [submenuIndex, setSubmenuIndex] = React.useState(null);
-  const [innerSubmenu, setInnerSubmenu] = React.useState({});
+  useEffect(() => {
+    fetch(`${API_URL}/api/categories`)
+      .then(res => res.json())
+      .then(data => setCategoryData(data))
+      .catch(err => console.error("Failed to load categories", err));
+  }, []);
 
   const openSubmenu = (index) => {
     setSubmenuIndex(submenuIndex === index ? null : index);
@@ -62,49 +30,59 @@ const CategoryCollapse = () => {
     }));
   };
 
+  const handleCategoryClick = (category, index) => {
+    if (category.subcategories && category.subcategories.length > 0) {
+      openSubmenu(index);
+    } else {
+      navigate(`/products?search=${category.name}`);
+    }
+  };
+
   return (
-    <ul className="category-list">
+    <ul className="list-none pl-0 m-0 w-full [&_ul]:list-none [&_li]:list-none">
       {categoryData.map((category, index) => (
-        <li className="category-item" key={index}>
-          <div className="category-header">
-            <Button className="category-button link" onClick={() => openSubmenu(index)}>
+        <li className="flex flex-col w-full" key={index}>
+          <div className="relative flex items-center w-full">
+            <Button className="!w-full !capitalize !justify-start !pl-[12px] !text-left !text-[16px] font-[550] !text-black/85 hover:!text-[#ff5252] transition-colors" onClick={() => handleCategoryClick(category, index)}>
               {category.name}
             </Button>
-            {submenuIndex === index ? (
-              <FaRegSquareMinus className="toggle-icon" onClick={() => openSubmenu(index)} />
-            ) : (
-              <FaRegSquarePlus className="toggle-icon" onClick={() => openSubmenu(index)} />
+            {category.subcategories && category.subcategories.length > 0 && (
+              submenuIndex === index ? (
+                <FaRegSquareMinus className="absolute top-3 right-[15px] cursor-pointer text-gray-600" onClick={() => openSubmenu(index)} />
+              ) : (
+                <FaRegSquarePlus className="absolute top-3 right-[15px] cursor-pointer text-gray-600" onClick={() => openSubmenu(index)} />
+              )
             )}
           </div>
 
-          {submenuIndex === index && category.subcategories.length > 0 && (
-            <ul className="submenu">
+          {submenuIndex === index && category.subcategories && category.subcategories.length > 0 && (
+            <ul className="list-none pl-[25px] m-0">
               {category.subcategories.map((sub, subIdx) => (
-                <li key={subIdx} className="subcategory-item">
-                  <div className="subcategory-header">
-                    <Button className="subcategory-button link" onClick={() => openInnerSubmenu(index, subIdx)}>
+                <li key={subIdx} className="flex flex-col w-full">
+                  <div className="relative flex items-center w-full">
+                    <Button className="!w-full !capitalize !justify-start !pl-[12px] !text-left !text-[15px] font-[470] !text-black/75 hover:!text-[#ff5252] transition-colors" onClick={() => openInnerSubmenu(index, subIdx)}>
                       {sub.name}
                     </Button>
-                    {sub.items.length > 0 && (
+                    {sub.items && sub.items.length > 0 && (
                       innerSubmenu[index] === subIdx ? (
                         <FaRegSquareMinus
-                          className="toggle-icon"
+                          className="absolute top-3 right-[15px] cursor-pointer text-gray-500"
                           onClick={() => openInnerSubmenu(index, subIdx)}
                         />
                       ) : (
                         <FaRegSquarePlus
-                          className="toggle-icon"
+                          className="absolute top-3 right-[15px] cursor-pointer text-gray-500"
                           onClick={() => openInnerSubmenu(index, subIdx)}
                         />
                       )
                     )}
                   </div>
 
-                  {innerSubmenu[index] === subIdx && sub.items.length > 0 && (
-                    <ul className="inner_submenu">
+                  {innerSubmenu[index] === subIdx && sub.items && sub.items.length > 0 && (
+                    <ul className="list-none pl-[25px] m-0">
                       {sub.items.map((item, itemIdx) => (
                         <li key={itemIdx}>
-                          <Link to="/" className="link">{item}</Link>
+                          <Link to={`/products?search=${item}`} className="block py-[6px] px-[12px] pl-[12px] text-[14px] font-[400] text-black/70 no-underline transition-colors duration-200 hover:!text-[#ff5252]">{item}</Link>
                         </li>
                       ))}
                     </ul>

@@ -1,55 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { Link } from 'react-router-dom';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
-import './style.css';
 
-// Category data (you can expand with image links later)
-const categories = [
-  { name: "Fashion", image: "https://serviceapi.spicezgold.com/download/1753475034183_1000013786.png" },
-  { name: "Electronics", image: "https://serviceapi.spicezgold.com/download/1741660988059_ele.png" },
-  { name: "Bags", image: "https://serviceapi.spicezgold.com/download/1741661045887_bag.png" },
-  { name: "Footwears", image: "https://serviceapi.spicezgold.com/download/1741661061379_foot.png" },
-  { name: "Groceries", image: "https://serviceapi.spicezgold.com/download/1741661077633_gro.png" },
-  { name: "Beauty", image: "https://serviceapi.spicezgold.com/download/1741661092792_beauty.png" },
-  { name: "Wellness", image: "https://serviceapi.spicezgold.com/download/1741661105893_well.png" },
-  { name: "Jewellery", image: "https://serviceapi.spicezgold.com/download/1749273446706_jw.png" },
-  { name: "Home &Decor", image: "https://imgs.search.brave.com/WJjdh_ywXXDhM_COppv41WukDCPRuTu3dM4GwvIFXJI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9jZG4u/dmVjdG9yc3RvY2su/Y29tL2kvcHJldmll/dy0xeC8yNy82Mi9o/b21lLWRlY29yLWNo/YWxrLXdoaXRlLWlj/b24tb24tYmxhY2st/YmFja2dyb3VuZC12/ZWN0b3ItMzMzOTI3/NjIuanBn" }
-];
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 const HomeCatSlider = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/categories`)
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error("Failed to load categories", err));
+  }, []);
+
   return (
-    <div className="homecatslider">
-      <div className="container">
-        <Swiper
-          slidesPerView={8}
-          spaceBetween={10}
-          navigation={true}
-          loop={true}
-          modules={[Navigation]}
-          className="mySwiper"
-        >
-          {categories.map((category, index) => (
-            <SwiperSlide key={index}>
-              <Link to="/">
-                <div className="cat-item">
-                  <img
-                    src={
-                      category.image ||
-                      "https://via.placeholder.com/60?text=No+Image"
-                    }
-                    alt={category.name}
-                    className="cat-img"
-                  />
-                  <h3 className="cat-title">{category.name}</h3>
-                </div>
-              </Link>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+    <div className="overflow-visible py-4">
+      <div className="w-[90%] mx-auto">
+        {categories.length > 0 && (
+          <Swiper
+            slidesPerView={Math.min(8, categories.length)}
+            spaceBetween={10}
+            navigation={true}
+            loop={categories.length > 8}
+            modules={[Navigation]}
+            className="[&_.swiper-button-prev]:w-[30px] [&_.swiper-button-prev]:h-[30px] [&_.swiper-button-prev]:min-w-[30px] [&_.swiper-button-prev]:after:text-[21px] [&_.swiper-button-next]:w-[30px] [&_.swiper-button-next]:h-[30px] [&_.swiper-button-next]:min-w-[30px] [&_.swiper-button-next]:after:text-[21px]"
+          >
+            {categories.map((category, index) => (
+              <SwiperSlide key={index}>
+                <Link to={`/products?search=${encodeURIComponent(category.name)}`} className="no-underline">
+                  <div className="py-7 px-3 bg-white border border-black/10 text-center flex flex-col items-center justify-center rounded transition-transform duration-300 ease-in-out group/cat h-[140px]">
+                    <img
+                      src={
+                        category.image ||
+                        "https://via.placeholder.com/60?text=No+Image"
+                      }
+                      alt={category.name}
+                      className="w-[60px] h-[60px] object-contain transition-transform duration-300 ease-in-out group-hover/cat:scale-110"
+                      loading="lazy"
+                    />
+                    <h3 className="mt-3 text-[14px] font-medium text-black line-clamp-1">{category.name}</h3>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Paper, Table, TableBody, TableCell, TableHead, TableRow, Chip } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
-import Header from '../components/Header';
+
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
@@ -22,7 +22,7 @@ const MyOrders = () => {
 
     return (
         <Box>
-            <Header />
+
             <Container sx={{ mt: 4, mb: 4 }}>
                 <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>My Orders</Typography>
                 <Table component={Paper} elevation={3} sx={{ borderRadius: '16px', overflow: 'hidden' }}>

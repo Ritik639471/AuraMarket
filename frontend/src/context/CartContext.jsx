@@ -16,7 +16,7 @@ export const CartProvider = ({ children }) => {
                 headers: { 'Authorization': `Bearer ${user.token}` }
             })
             .then(res => res.json())
-            .then(data => setCart(data))
+            .then(data => { if (Array.isArray(data)) setCart(data); })
             .catch(err => console.error('Cart Fetch Error:', err));
         } else {
             setCart([]);
@@ -40,6 +40,21 @@ export const CartProvider = ({ children }) => {
         }
     };
 
+    const updateQuantity = async (productId, quantity) => {
+        const res = await fetch(`${API_URL}/api/auth/cart`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`
+            },
+            body: JSON.stringify({ productId, quantity })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            setCart(data);
+        }
+    };
+
     const removeFromCart = async (productId) => {
         const res = await fetch(`${API_URL}/api/auth/cart/${productId}`, {
             method: 'DELETE',
@@ -51,10 +66,18 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    const clearCart = () => setCart([]);
+    const clearCart = async () => {
+        if (user) {
+            await fetch(`${API_URL}/api/auth/cart`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${user.token}` }
+            });
+        }
+        setCart([]);
+    };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+        <CartContext.Provider value={{ cart, addToCart, updateQuantity, removeFromCart, clearCart }}>
             {children}
         </CartContext.Provider>
     );

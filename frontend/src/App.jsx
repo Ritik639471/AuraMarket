@@ -1,47 +1,71 @@
-import { useState } from 'react'
-import './App.css'
-import { BrowserRouter, Routes, Route } from 'react-router-dom' 
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom' 
+import { lazy, Suspense } from 'react';
 import Header from './components/Header'
-import { AuthProvider } from './context/AuthContext';
+import Footer from './components/Footer';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { CartProvider } from './context/CartContext';
-import Home from './pages/home';
-import ProductListing from './pages/ProductListing';
-import ProductDetails from './pages/ProductDetails';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Wishlist from './pages/Wishlist';
-import ShopkeeperDashboard from './pages/ShopkeeperDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import Cart from './pages/Cart';
-import MyOrders from './pages/MyOrders';
-import Footer from './components/Footer';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Lazy loaded pages for performance (code splitting)
+const Home = lazy(() => import('./pages/home'));
+const ProductListing = lazy(() => import('./pages/ProductListing'));
+const ProductDetails = lazy(() => import('./pages/ProductDetails'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Wishlist = lazy(() => import('./pages/Wishlist'));
+const Cart = lazy(() => import('./pages/Cart'));
+const MyOrders = lazy(() => import('./pages/MyOrders'));
+const ShopkeeperDashboard = lazy(() => import('./pages/ShopkeeperDashboard'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
+// Route protection wrapper
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" />;
+  if (allowedRoles && !allowedRoles.includes(user.role)) return <Navigate to="/" />;
+  return children;
+};
+
+// Fallback loader while pages download
+const PageLoader = () => (
+  <div className="flex justify-center items-center h-screen bg-gray-50">
+    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-500"></div>
+  </div>
+);
+
+function AppRoutes() {
+  return (
+    <>
+      <Header />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<ProductListing />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/myorders" element={<ProtectedRoute><MyOrders /></ProtectedRoute>} />
+          <Route path="/shopkeeper" element={<ProtectedRoute allowedRoles={['shopkeeper']}><ShopkeeperDashboard /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
+        </Routes>
+      </Suspense>
+      <Footer />
+    </>
+  );
+}
+
+function App() {
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <WishlistProvider>
           <CartProvider>
             <BrowserRouter>
-              <Header />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<ProductListing />} />
-                <Route path="/product/:id" element={<ProductDetails />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/cart" element={<Cart />} />
-              <Route path="/myorders" element={<MyOrders />} />
-                <Route path="/shopkeeper" element={<ShopkeeperDashboard />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-              </Routes>
-              <Footer />
+              <AppRoutes />
             </BrowserRouter>
           </CartProvider>
         </WishlistProvider>

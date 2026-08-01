@@ -2,13 +2,12 @@ import React from 'react';
 import { Container, Typography, Grid, Box, Paper, Button, IconButton, Divider } from '@mui/material';
 import { Delete, Add, Remove } from '@mui/icons-material';
 import { useCart } from '../context/CartContext';
-import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 const Cart = () => {
-    const { cart, removeFromCart, addToCart, clearCart } = useCart();
+    const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -66,11 +65,11 @@ const Cart = () => {
                                         <Typography variant="h6" color="primary">${item.product.price}</Typography>
                                     </Box>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <IconButton size="small" onClick={() => addToCart(item.product, -1)} disabled={item.quantity <= 1}>
+                                        <IconButton size="small" onClick={() => updateQuantity(item.product._id, item.quantity - 1)} disabled={item.quantity <= 1}>
                                             <Remove />
                                         </IconButton>
                                         <Typography>{item.quantity}</Typography>
-                                        <IconButton size="small" onClick={() => addToCart(item.product, 1)}>
+                                        <IconButton size="small" onClick={() => updateQuantity(item.product._id, item.quantity + 1)}>
                                             <Add />
                                         </IconButton>
                                     </Box>

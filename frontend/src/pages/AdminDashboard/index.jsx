@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Tabs, Tab, MenuItem, Select, Chip } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import { Campaign, Add, Delete, CheckCircle, Warning, People, ShoppingBag, ListAlt } from '@mui/icons-material';
-import Header from '../../components/Header';
+
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
@@ -109,7 +109,7 @@ const AdminDashboard = () => {
 
     return (
         <Box>
-            <Header />
+
             <Container sx={{ mt: 4 }}>
                 <Typography variant="h4" gutterBottom sx={{ fontWeight: 800 }}>Admin Dashboard</Typography>
                 

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const adSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String, default: '' },
     image: { type: String, required: true },
     link: { type: String },
     active: { type: Boolean, default: true },

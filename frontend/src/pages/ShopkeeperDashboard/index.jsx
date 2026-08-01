@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Tabs, Tab, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
-import Header from '../../components/Header';
+
 import { ShoppingBag, Receipt, Add, LocalShipping, DoneAll, Payment } from '@mui/icons-material';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
@@ -101,7 +101,7 @@ const ShopkeeperDashboard = () => {
 
     return (
         <Box>
-            <Header />
+
             <Container sx={{ mt: 4 }}>
                 <Typography variant="h4" gutterBottom>Shopkeeper Dashboard</Typography>
                 <Tabs value={tab} onChange={(e, v) => setTab(v)}>
