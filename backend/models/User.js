@@ -6,6 +6,15 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['customer', 'shopkeeper', 'admin'], default: 'customer' },
+    phone: { type: String },
+    address: {
+        addressLine1: { type: String },
+        addressLine2: { type: String },
+        city: { type: String },
+        state: { type: String },
+        pincode: { type: String },
+        country: { type: String, default: 'India' }
+    },
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
     cart: [{ 
         product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },

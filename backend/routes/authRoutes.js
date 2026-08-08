@@ -1,11 +1,13 @@
 import express from 'express';
-import { registerUser, loginUser, getCart, addToCart, removeFromCart, updateCartQuantity, clearCart, getAllUsers, updateUserRole, deleteUser } from '../controllers/authController.js';
+import { registerUser, loginUser, getProfile, updateProfile, getCart, addToCart, removeFromCart, updateCartQuantity, clearCart, getAllUsers, updateUserRole, deleteUser } from '../controllers/authController.js';
 import { protect, authorize } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.get('/profile', protect, getProfile);
+router.put('/profile', protect, updateProfile);
 
 // Cart routes
 router.get('/cart', protect, getCart);

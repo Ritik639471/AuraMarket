@@ -11,31 +11,12 @@ const Cart = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    const handleCheckout = async () => {
-        const orderData = {
-            items: cart.map(item => ({
-                product: item.product._id,
-                quantity: item.quantity,
-                price: item.product.price
-            })),
-            totalAmount: total,
-            shippingAddress: 'Update your address in profile' // Placholder
-        };
-
-        const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}`
-            },
-            body: JSON.stringify(orderData)
-        });
-
-        if (res.ok) {
-            alert('Order placed successfully! 🚀');
-            clearCart();
-            navigate('/');
+    const handleCheckout = () => {
+        if (!user) {
+            navigate('/login');
+            return;
         }
+        navigate('/checkout');
     };
 
     const total = cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
@@ -57,7 +38,7 @@ const Cart = () => {
                             {cart.map((item) => (
                                 <Paper key={item.product._id} elevation={1} sx={{ p: 2, mb: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
                                     <Box sx={{ width: 100, height: 100, borderRadius: '8px', overflow: 'hidden' }}>
-                                        <img src={item.product.image} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        <img src={item.product.images?.[0] || 'https://via.placeholder.com/100'} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     </Box>
                                     <Box sx={{ flexGrow: 1 }}>
                                         <Typography variant="h6">{item.product.name}</Typography>
@@ -98,10 +79,10 @@ const Cart = () => {
                                 <Button 
                                     variant="contained" 
                                     fullWidth size="large" 
-                                    sx={{ borderRadius: '12px', py: 1.5 }}
+                                    sx={{ borderRadius: '12px', py: 1.5, backgroundColor: '#ff5252', '&:hover': { backgroundColor: '#e34e4e' } }}
                                     onClick={handleCheckout}
                                 >
-                                    Proceed to Checkout
+                                    Proceed to Checkout →
                                 </Button>
                             </Paper>
                         </Grid>

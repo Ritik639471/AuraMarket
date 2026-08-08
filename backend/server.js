@@ -10,7 +10,7 @@ import wishlistRoutes from './routes/wishlistRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import dns from 'dns';
 
-// Force Google DNS to fix ECONNREFUSED querySrv errors on Windows/ISP
+
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 dotenv.config();
@@ -19,12 +19,12 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Database Connection
+
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/auramarket')
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('Error connecting to MongoDB:', err));
 
-// Routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
@@ -32,7 +32,7 @@ app.use('/api/ads', adRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/categories', categoryRoutes);
 
-// Basic Route
+
 app.get('/', (req, res) => {
     res.send('Shopping App API is running...');
 });

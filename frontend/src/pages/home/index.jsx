@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import HomeSlider from "../../components/HomeSlider";
 import HomeCatSlider from "../../components/HomeCatSlider";
 import AdsBannerSlider from "../../components/AdsBannerSlider";
-import AdsBannerSliderV2 from "../../components/AdsBannerSliderV2";
+import BannerBox from "../../components/BannerBox";
 import ProductsSlider from "../../components/ProductsSlider";
 import BlogItem from "../../components/BlogItem";
 import HomeSliderV2 from "../../components/HomeSliderV2";
-import BannerBoxV2 from "../../components/BannerBoxV2";
 import { FaShippingFast } from "react-icons/fa";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -30,8 +29,9 @@ const Home = () => {
     fetch(`${API_URL}/api/products`)
       .then(res => res.json())
       .then(data => {
-        setProducts(data);
-        setFilteredProducts(data);
+        const productList = Array.isArray(data) ? data : (data.products || []);
+        setProducts(productList);
+        setFilteredProducts(productList);
       })
       .catch(err => console.error('Home Products Fetch Error:', err));
     
@@ -63,14 +63,14 @@ const Home = () => {
             <HomeSliderV2 />
           </div>
           <div className="flex w-[25%] flex-col items-center justify-between">
-          <BannerBoxV2 
+          <BannerBox 
             img="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80"
             link="/"
             title="Buy Men's Footwear with low price"
             price="$10"
             info="right"
           />
-          <BannerBoxV2 
+          <BannerBox 
             img="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&q=80"
             link="/"
             title="Buy Apple Iphone with low price"
@@ -155,7 +155,12 @@ const Home = () => {
             </div>
 
           <ProductsSlider items={6} products={products} />
-          <AdsBannerSliderV2 items={4} />
+          <AdsBannerSlider items={4} autoplay={true}>
+            <SwiperSlide><BannerBox img="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80" link="/" title="Buy Men's Footwear with low price" price="$10" info="right" /></SwiperSlide>
+            <SwiperSlide><BannerBox img="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&q=80" link="/" title="Buy Apple Iphone with low price" price="$499" info="left" /></SwiperSlide>
+            <SwiperSlide><BannerBox img="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80" link="/" title="Buy Men's Footwear with low price" price="$10" info="right" /></SwiperSlide>
+            <SwiperSlide><BannerBox img="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&q=80" link="/" title="Buy Apple Iphone with low price" price="$499" info="left" /></SwiperSlide>
+          </AdsBannerSlider>
          </div>
       </section>
       

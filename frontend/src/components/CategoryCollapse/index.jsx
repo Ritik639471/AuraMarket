@@ -30,12 +30,8 @@ const CategoryCollapse = () => {
     }));
   };
 
-  const handleCategoryClick = (category, index) => {
-    if (category.subcategories && category.subcategories.length > 0) {
-      openSubmenu(index);
-    } else {
-      navigate(`/products?search=${category.name}`);
-    }
+  const handleCategoryClick = (category) => {
+    navigate(`/products?category=${category.name}`);
   };
 
   return (
@@ -43,14 +39,14 @@ const CategoryCollapse = () => {
       {categoryData.map((category, index) => (
         <li className="flex flex-col w-full" key={index}>
           <div className="relative flex items-center w-full">
-            <Button className="!w-full !capitalize !justify-start !pl-[12px] !text-left !text-[16px] font-[550] !text-black/85 hover:!text-[#ff5252] transition-colors" onClick={() => handleCategoryClick(category, index)}>
+            <Button className="!w-full !capitalize !justify-start !pl-[12px] !text-left !text-[16px] font-[550] !text-black/85 hover:!text-[#ff5252] transition-colors" onClick={() => handleCategoryClick(category)}>
               {category.name}
             </Button>
             {category.subcategories && category.subcategories.length > 0 && (
               submenuIndex === index ? (
-                <FaRegSquareMinus className="absolute top-3 right-[15px] cursor-pointer text-gray-600" onClick={() => openSubmenu(index)} />
+                <FaRegSquareMinus className="absolute top-3 right-[15px] cursor-pointer text-gray-600 z-10" onClick={(e) => { e.stopPropagation(); openSubmenu(index); }} />
               ) : (
-                <FaRegSquarePlus className="absolute top-3 right-[15px] cursor-pointer text-gray-600" onClick={() => openSubmenu(index)} />
+                <FaRegSquarePlus className="absolute top-3 right-[15px] cursor-pointer text-gray-600 z-10" onClick={(e) => { e.stopPropagation(); openSubmenu(index); }} />
               )
             )}
           </div>
@@ -60,19 +56,19 @@ const CategoryCollapse = () => {
               {category.subcategories.map((sub, subIdx) => (
                 <li key={subIdx} className="flex flex-col w-full">
                   <div className="relative flex items-center w-full">
-                    <Button className="!w-full !capitalize !justify-start !pl-[12px] !text-left !text-[15px] font-[470] !text-black/75 hover:!text-[#ff5252] transition-colors" onClick={() => openInnerSubmenu(index, subIdx)}>
+                    <Button className="!w-full !capitalize !justify-start !pl-[12px] !text-left !text-[15px] font-[470] !text-black/75 hover:!text-[#ff5252] transition-colors" onClick={() => navigate(`/products?category=${sub.name}`)}>
                       {sub.name}
                     </Button>
                     {sub.items && sub.items.length > 0 && (
                       innerSubmenu[index] === subIdx ? (
                         <FaRegSquareMinus
-                          className="absolute top-3 right-[15px] cursor-pointer text-gray-500"
-                          onClick={() => openInnerSubmenu(index, subIdx)}
+                          className="absolute top-3 right-[15px] cursor-pointer text-gray-500 z-10"
+                          onClick={(e) => { e.stopPropagation(); openInnerSubmenu(index, subIdx); }}
                         />
                       ) : (
                         <FaRegSquarePlus
-                          className="absolute top-3 right-[15px] cursor-pointer text-gray-500"
-                          onClick={() => openInnerSubmenu(index, subIdx)}
+                          className="absolute top-3 right-[15px] cursor-pointer text-gray-500 z-10"
+                          onClick={(e) => { e.stopPropagation(); openInnerSubmenu(index, subIdx); }}
                         />
                       )
                     )}
@@ -82,7 +78,7 @@ const CategoryCollapse = () => {
                     <ul className="list-none pl-[25px] m-0">
                       {sub.items.map((item, itemIdx) => (
                         <li key={itemIdx}>
-                          <Link to={`/products?search=${item}`} className="block py-[6px] px-[12px] pl-[12px] text-[14px] font-[400] text-black/70 no-underline transition-colors duration-200 hover:!text-[#ff5252]">{item}</Link>
+                          <Link to={`/products?category=${item}`} className="block py-[6px] px-[12px] pl-[12px] text-[14px] font-[400] text-black/70 no-underline transition-colors duration-200 hover:!text-[#ff5252]">{item}</Link>
                         </li>
                       ))}
                     </ul>

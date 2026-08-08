@@ -32,7 +32,7 @@ const HomeCatSlider = () => {
           >
             {categories.map((category, index) => (
               <SwiperSlide key={index}>
-                <Link to={`/products?search=${encodeURIComponent(category.name)}`} className="no-underline">
+                <Link to={`/products?category=${encodeURIComponent(category.name)}`} className="no-underline">
                   <div className="py-7 px-3 bg-white border border-black/10 text-center flex flex-col items-center justify-center rounded transition-transform duration-300 ease-in-out group/cat h-[140px]">
                     <img
                       src={

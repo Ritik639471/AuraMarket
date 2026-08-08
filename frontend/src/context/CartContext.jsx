@@ -9,7 +9,6 @@ export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const { user } = useAuth();
 
-    // Fetch cart on login
     useEffect(() => {
         if (user) {
             fetch(`${API_URL}/api/auth/cart`, {

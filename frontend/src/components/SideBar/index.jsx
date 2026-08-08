@@ -1,153 +1,93 @@
-import React from "react";
-import { FormGroup, FormControlLabel, Checkbox } from "@mui/material";
-import { Collapse } from 'react-collapse';
-import { LiaAngleDownSolid , LiaAngleUpSolid } from "react-icons/lia";
-import RangeSlider from 'react-range-slider-input';
-import 'react-range-slider-input/dist/style.css';
-import Rating from '@mui/material/Rating';
-import {Button} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Slider, Typography, Box, Chip, Rating } from "@mui/material";
+import { FilterList, ExpandMore, ExpandLess } from "@mui/icons-material";
 
-const categoryData = [
-    {
-        name: "Fashion",
-        subcategories: [
-            { name: "Women", items: ["Sarees", "Tops", "Jeans"] },
-            { name: "Girls", items: ["Kurtas & Suits", "Tops"] },
-            { name: "Children", items: ["T-shirt", "Jeans", "Kurtis", "Lower & Pants"] },
-            { name: "Men", items: ["Jeans", "Formal", "T-shirt"] },
-        ]
-    },
-    {
-        name: "Electronics",
-        subcategories: [
-            { name: "Laptops", items: ["Lenovo", "Asus", "Dell", "MAC"] },
-            { name: "Smart Watch", items: ["Samsung", "Apple", "OnePlus", "Fitbit"] },
-            { name: "Mobile", items: ["Apple", "Samsung", "OPPO", "Vivo", "OnePlus"] },
-        ]
-    },
-    {
-        name: "Bags",
-        subcategories: [
-            { name: "Men Bags", items: [] },
-            { name: "Women Bags", items: [] },
-            { name: "Kids Bags", items: [] },
-        ]
-    },
-    {
-        name: "Footwears",
-        subcategories: [
-            { name: "Men", items: [] },
-            { name: "Women", items: [] },
-            { name: "Kids", items: [] },
-        ]
-    },
-    { name: "Groceries", subcategories: [] },
-    { name: "Beauty", subcategories: [] },
-    { name: "Wellness", subcategories: [] },
-    { name: "Jewellery", subcategories: [] },
-    { name: "Home Decor", subcategories: [] },
-];
+const API_URL = import.meta.env.VITE_API_URL || '';
 
-const SideBar = ({ onCategoryChange, onPriceChange, onRatingChange }) => {
-    const [isOpenedCategory, setIsOpenedCategory] = React.useState(true);
-    const [isOpenedAvail, setIsOpenedAvail] = React.useState(false);
-    const [isOpenedSize, setIsOpenedSize] = React.useState(false);
-    const [priceRange, setPriceRange] = React.useState([0, 5000]);
+const SectionHeader = ({ title, isOpen, onToggle }) => (
+    <Box
+        onClick={onToggle}
+        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', py: 1.5, borderBottom: '1px solid #f0f0f0' }}
+    >
+        <Typography sx={{ fontWeight: 700, fontSize: '14px', color: '#2b3445', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            {title}
+        </Typography>
+        {isOpen ? <ExpandLess sx={{ fontSize: 18, color: '#999' }} /> : <ExpandMore sx={{ fontSize: 18, color: '#999' }} />}
+    </Box>
+);
 
-    const handleCategoryToggle = (category) => {
-        if (onCategoryChange) onCategoryChange(category);
+const SideBar = ({ onPriceChange, onRatingChange, dynamicPriceRange = [0, 10000] }) => {
+    const [openSections, setOpenSections] = useState({ price: true, rating: false });
+    const [priceRange, setPriceRange] = useState(dynamicPriceRange);
+    const [selectedRating, setSelectedRating] = useState(null);
+    useEffect(() => {
+        setPriceRange(dynamicPriceRange);
+    }, [dynamicPriceRange[0], dynamicPriceRange[1]]);
+
+    const toggleSection = (key) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+
+    const handlePriceChange = (_, newValue) => {
+        setPriceRange(newValue);
+        if (onPriceChange) onPriceChange(newValue);
     };
 
-    const handlePriceEnd = (value) => {
-        setPriceRange(value);
-        if (onPriceChange) onPriceChange(value);
+    const handleRatingClick = (r) => {
+        const newRating = selectedRating === r ? null : r;
+        setSelectedRating(newRating);
+        if (onRatingChange) onRatingChange(newRating);
     };
-
 
     return (
-        <aside className="w-full">
-            <div className="mb-4">
-                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
-                    Shop By Category
-                    <button className="w-[30px] h-[30px] min-w-[30px] text-[18px] border-none bg-white font-semibold text-black cursor-pointer flex items-center justify-center" onClick={()=> setIsOpenedCategory(!isOpenedCategory)}>
-                        {!isOpenedCategory ? <LiaAngleDownSolid  />:
-                        <LiaAngleUpSolid />}
-                    </button>
-                </h3>
-                <Collapse isOpened={isOpenedCategory}>
-                    <div className="flex flex-col max-w-[60%] pl-5 max-h-[200px] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:w-[5px] [&::-webkit-scrollbar-thumb]:bg-[#ccc] [&::-webkit-scrollbar-thumb]:rounded-full">
-                        {["Fashion", "Electronics", "Bags", "Footwears", "Groceries", "Beauty", "Wellness", "Jewellery", "Home Decor"].map(cat => (
-                            <FormControlLabel 
-                                key={cat}
-                                control={<Checkbox size="small" onChange={() => handleCategoryToggle(cat)} />} 
-                                label={cat} 
-                            />
+        <Box sx={{ width: '100%', bgcolor: 'white', borderRadius: '12px', border: '1px solid #f0f0f0', overflow: 'hidden' }}>
+            <Box sx={{ px: 2.5, py: 2, borderBottom: '2px solid #ff5252', display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FilterList sx={{ color: '#ff5252', fontSize: 20 }} />
+                <Typography sx={{ fontWeight: 800, fontSize: '15px', color: '#2b3445' }}>FILTERS</Typography>
+            </Box>
+
+            <Box sx={{ px: 2.5 }}>
+                <SectionHeader title="Price Range" isOpen={openSections.price} onToggle={() => toggleSection('price')} />
+                {openSections.price && (
+                    <Box sx={{ py: 2 }}>
+                        <Slider
+                            value={priceRange}
+                            onChange={handlePriceChange}
+                            min={dynamicPriceRange[0]}
+                            max={dynamicPriceRange[1]}
+                            valueLabelDisplay="auto"
+                            valueLabelFormat={v => `$${v}`}
+                            sx={{ color: '#ff5252', '& .MuiSlider-thumb': { width: 16, height: 16 } }}
+                        />
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
+                            <Chip label={`$${priceRange[0]}`} size="small" variant="outlined" sx={{ fontSize: '12px', borderColor: '#ff5252', color: '#ff5252', fontWeight: 700 }} />
+                            <Chip label={`$${priceRange[1]}`} size="small" variant="outlined" sx={{ fontSize: '12px', borderColor: '#ff5252', color: '#ff5252', fontWeight: 700 }} />
+                        </Box>
+                    </Box>
+                )}
+
+                <SectionHeader title="Rating" isOpen={openSections.rating} onToggle={() => toggleSection('rating')} />
+                {openSections.rating && (
+                    <Box sx={{ py: 1.5, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        {[5, 4, 3, 2, 1].map(r => (
+                            <Box
+                                key={r}
+                                onClick={() => handleRatingClick(r)}
+                                sx={{
+                                    display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer',
+                                    px: 1, py: 0.5, borderRadius: '6px', transition: 'all 0.15s',
+                                    background: selectedRating === r ? '#fff5f5' : 'transparent',
+                                    border: selectedRating === r ? '1px solid #ff5252' : '1px solid transparent',
+                                    '&:hover': { background: '#fff5f5' }
+                                }}
+                            >
+                                <Rating value={r} size="small" readOnly />
+                                <Typography sx={{ fontSize: '12px', color: '#888' }}>&amp; above</Typography>
+                            </Box>
                         ))}
-                    </div>
-                </Collapse>
-            </div>
-            <div className="mb-4">
-                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
-                    Availability
-                    <button className="w-[30px] h-[30px] min-w-[30px] text-[18px] border-none bg-white font-semibold text-black cursor-pointer flex items-center justify-center" onClick={()=> setIsOpenedAvail(!isOpenedAvail)}>
-                        {!isOpenedAvail ? <LiaAngleDownSolid  />:
-                        <LiaAngleUpSolid />}
-                    </button>
-                </h3>
-                <Collapse isOpened={isOpenedAvail}>
-                    <div className="flex flex-col max-w-[60%] pl-5 max-h-[200px] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:w-[5px] [&::-webkit-scrollbar-thumb]:bg-[#ccc] [&::-webkit-scrollbar-thumb]:rounded-full">
-                        <FormControlLabel control={<Checkbox size="small" />} label="Available" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="Out of Stock" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="Coming Soon" />
-                    </div>
-                </Collapse>
-            </div>
-            <div className="mb-4">
-                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
-                    Size
-                    <button className="w-[30px] h-[30px] min-w-[30px] text-[18px] border-none bg-white font-semibold text-black cursor-pointer flex items-center justify-center" onClick={()=> setIsOpenedSize(!isOpenedSize)}>
-                        {!isOpenedSize ? <LiaAngleDownSolid  />:
-                        <LiaAngleUpSolid />}
-                    </button>
-                </h3>
-                <Collapse isOpened={isOpenedSize}>
-                    <div className="flex flex-col max-w-[60%] pl-5 max-h-[200px] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:w-[5px] [&::-webkit-scrollbar-thumb]:bg-[#ccc] [&::-webkit-scrollbar-thumb]:rounded-full">
-                        <FormControlLabel control={<Checkbox size="small" />} label="Small" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="Medium" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="Large" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="Extra Large" />
-                        <FormControlLabel control={<Checkbox size="small" />} label="XXL" />
-                    </div>
-                </Collapse>
-            </div>
-            <div className="mb-4">
-                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
-                    Filter By Price
-                </h3>
-                <RangeSlider min={0} max={5000} value={priceRange} onInput={setPriceRange} onThumbDragEnd={() => onPriceChange && onPriceChange(priceRange)} />
-                <div className="flex pt-4 pb-2">
-                    <span className="text-[14px]">
-                        From: <strong className="text-gray-900">Rs:{priceRange[0]}</strong>
-                    </span>
-                    <span className="ml-auto text-[14px]">
-                        To: <strong className="text-gray-900">Rs:{priceRange[1]}</strong>
-                    </span>
-                </div>
-            </div>
-            <div className="mb-4">
-                <h3 className="text-[18px] font-semibold flex items-center gap-2.5 mb-2">
-                    Filter By Rating
-                </h3>
-                <div className="w-full flex gap-4 flex-col">
-                    {[5, 4, 3, 2, 1].map(r => (
-                        <div key={r} style={{ cursor: 'pointer' }} onClick={() => onRatingChange && onRatingChange(r)}>
-                            <Rating name={`rating-${r}`} defaultValue={r} size="small" readOnly />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </aside>
-    )
-}
+                    </Box>
+                )}
+            </Box>
+        </Box>
+    );
+};
 
 export default SideBar;

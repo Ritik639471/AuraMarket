@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { Button } from "@mui/material";
@@ -7,15 +7,24 @@ import { FaRegHeart } from "react-icons/fa";
 import { MdZoomOutMap } from "react-icons/md";
 import { useWishlist } from "../../context/WishlistContext";
 import { useCart } from "../../context/CartContext";
+import { useToast } from "../../context/ToastContext";
+import { useCompare } from "../../context/CompareContext";
+import QuickViewModal from "../QuickViewModal";
 
 const ProductItem = ({ product }) => {
+  const [quickViewOpen, setQuickViewOpen] = React.useState(false);
   const { wishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const { showToast } = useToast();
+  const { compareList, toggleCompare } = useCompare();
   if (!product) return null;
 
   const isInWishlist = wishlist.some(item => (item._id || item) === product._id);
+  const isInCompare = compareList.some(item => (item._id || item) === product._id);
 
   const navigate = useNavigate();
+
+
 
   return (
     <div 
@@ -35,21 +44,21 @@ const ProductItem = ({ product }) => {
         <div className="absolute -top-[200px] right-[5px] flex flex-col gap-2 transition-all duration-300 opacity-0 z-10 group-hover/img:top-[15px] group-hover/img:opacity-100">
           <Button 
             className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white hover:!bg-[#ff5252] !p-0 group/btn shadow-sm"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); setQuickViewOpen(true); }}
           >
             <MdZoomOutMap className="text-[18px] text-black transition-colors duration-300 group-hover/btn:text-white pointer-events-none" />
           </Button>
           <Button 
             className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white hover:!bg-[#ff5252] !p-0 group/btn shadow-sm" 
-            onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); }}
+            onClick={(e) => { e.stopPropagation(); toggleWishlist(product._id); showToast(isInWishlist ? 'Removed from Wishlist' : '❤️ Added to Wishlist', isInWishlist ? 'info' : 'success'); }}
           >
             <FaRegHeart className={`text-[18px] transition-colors duration-300 group-hover/btn:text-white pointer-events-none ${isInWishlist ? '!text-[#ff5252]' : 'text-black'}`} />
           </Button>
           <Button 
-            className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white hover:!bg-[#ff5252] !p-0 group/btn shadow-sm"
-            onClick={(e) => e.stopPropagation()}
+            className={`!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white hover:!bg-[#ff5252] !p-0 group/btn shadow-sm ${isInCompare ? '!bg-[#ff5252]' : ''}`}
+            onClick={(e) => { e.stopPropagation(); toggleCompare(product); }}
           >
-            <IoGitCompare className="text-[18px] text-black transition-colors duration-300 group-hover/btn:text-white pointer-events-none" />
+            <IoGitCompare className={`text-[18px] transition-colors duration-300 group-hover/btn:text-white pointer-events-none ${isInCompare ? 'text-white' : 'text-black'}`} />
           </Button>
         </div>
       </div>
@@ -71,13 +80,14 @@ const ProductItem = ({ product }) => {
           variant="contained" 
           fullWidth 
           sx={{ mt: 1, backgroundColor: '#ff5252', '&:hover': { backgroundColor: '#e34e4e' } }}
-          onClick={(e) => { e.stopPropagation(); addToCart(product); }}
+          onClick={(e) => { e.stopPropagation(); addToCart(product); showToast('🛒 Added to Cart!'); }}
         >
           Add to Cart
         </Button>
       </div>
+      {quickViewOpen && <QuickViewModal open={quickViewOpen} handleClose={() => setQuickViewOpen(false)} product={product} />}
     </div>
   );
 };
 
-export default ProductItem;
+export default memo(ProductItem);

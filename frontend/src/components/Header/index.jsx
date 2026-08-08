@@ -14,6 +14,7 @@ import Navigation from '../Navigation';
 import { useAuth } from '../../context/AuthContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
+import { useCompare } from '../../context/CompareContext';
 import { Button } from '@mui/material';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -30,6 +31,7 @@ const Header = () => {
     const { user, logout } = useAuth();
     const { wishlist } = useWishlist();
     const { cart } = useCart();
+    const { compareList } = useCompare();
     
     return (
     <header className="bg-white/85 backdrop-blur-md sticky top-0 z-50 shadow-sm">
@@ -68,6 +70,7 @@ const Header = () => {
               {user ? (
                 <>
                   {user.role === 'customer' && <li><Link to="/myorders" className="text-[15px] font-medium no-underline transition-all duration-300 hover:text-blue-600">My Orders</Link></li>}
+                  <li><Link to="/profile" className="text-[15px] font-medium no-underline transition-all duration-300 hover:text-blue-600">My Profile</Link></li>
                   <li><Link to={user.role === 'admin' ? "/admin" : user.role === 'shopkeeper' ? "/shopkeeper" : "/"} className="text-[15px] font-medium no-underline transition-all duration-300 hover:text-blue-600">Dashboard</Link></li>
                   <li><Button onClick={logout} className="text-[15px] font-medium no-underline transition-all duration-300 hover:text-blue-600" sx={{ textTransform: 'none', color: 'inherit', p: 0, minWidth: 'auto' }}>Logout</Button></li>
                 </>
@@ -79,8 +82,8 @@ const Header = () => {
               )}
               <li>
                 <Tooltip title="Compare" >
-                  <IconButton aria-label="compare">
-                    <StyledBadge badgeContent={0} color="secondary">
+                  <IconButton aria-label="compare" component={Link} to="/compare">
+                    <StyledBadge badgeContent={compareList.length} color="secondary">
                       <IoGitCompare className="text-gray-700 hover:text-blue-600 transition-colors" />
                     </StyledBadge>
                   </IconButton>
