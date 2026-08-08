@@ -25,23 +25,28 @@ const AdminDashboard = () => {
         try {
             if (tab === 0) {
                 const res = await fetch(`${API_URL}/api/ads`);
-                setAds(await res.json());
+                const data = await res.json();
+                setAds(Array.isArray(data) ? data : []);
             } else if (tab === 1) {
                 const res = await fetch(`${API_URL}/api/products`);
-                setProducts(await res.json());
+                const data = await res.json();
+                setProducts(Array.isArray(data) ? data : (data.products || []));
             } else if (tab === 2) {
                 const res = await fetch(`${API_URL}/api/auth/users`, {
                     headers: { 'Authorization': `Bearer ${user.token}` }
                 });
-                setUsersList(await res.json());
+                const data = await res.json();
+                setUsersList(Array.isArray(data) ? data : []);
             } else if (tab === 3) {
                 const res = await fetch(`${API_URL}/api/orders/shopkeeper`, {
                     headers: { 'Authorization': `Bearer ${user.token}` }
                 });
-                setOrders(await res.json());
+                const data = await res.json();
+                setOrders(Array.isArray(data) ? data : []);
             } else if (tab === 4) {
                 const res = await fetch(`${API_URL}/api/categories`);
-                setCategories(await res.json());
+                const data = await res.json();
+                setCategories(Array.isArray(data) ? data : []);
             }
         } catch (err) {
             console.error('Fetch error:', err);

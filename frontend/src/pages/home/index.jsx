@@ -29,7 +29,7 @@ const Home = () => {
     fetch(`${API_URL}/api/products`)
       .then(res => res.json())
       .then(data => {
-        const productList = Array.isArray(data) ? data : (data.products || []);
+        const productList = Array.isArray(data) ? data : (Array.isArray(data?.products) ? data.products : []);
         setProducts(productList);
         setFilteredProducts(productList);
       })
@@ -37,7 +37,7 @@ const Home = () => {
     
     fetch(`${API_URL}/api/ads`)
       .then(res => res.json())
-      .then(data => setAds(data))
+      .then(data => setAds(Array.isArray(data) ? data : []))
       .catch(err => console.error('Home Ads Fetch Error:', err));
   }, []);
 

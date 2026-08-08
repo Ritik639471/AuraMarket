@@ -25,7 +25,7 @@ const Search = () => {
         const res = await fetch(`${API_URL}/api/products/search?q=${encodeURIComponent(query)}`);
         if (res.ok) {
           const data = await res.json();
-          setSuggestions(data.slice(0, 5)); // show top 5 suggestions
+          setSuggestions(Array.isArray(data) ? data.slice(0, 5) : []); // show top 5 suggestions
         }
       } catch (err) {
         console.error("Search error:", err);

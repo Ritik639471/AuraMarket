@@ -1,6 +1,6 @@
 # 🛒 AuraMarket 
 
-![AuraMarket Banner](https://via.placeholder.com/1200x300/1e293b/ffffff.png?text=AuraMarket+-+Modern+MERN+E-Commerce)
+![AuraMarket Banner](https://placehold.co/1200x300/1e293b/ffffff.png?text=AuraMarket+-+Modern+MERN+E-Commerce)
 
 > A modern, full-stack e-commerce platform built with the MERN stack (MongoDB, Express, React, Node.js). AuraMarket provides a seamless shopping experience with features for customers, shopkeepers, and administrators.
 

@@ -57,7 +57,7 @@ const ProductListing = () => {
 
       const res = await fetch(`${API_URL}/api/products?${params}`);
       const data = await res.json();
-      const productList = Array.isArray(data) ? data : (data.products || []);
+      const productList = Array.isArray(data) ? data : (Array.isArray(data?.products) ? data.products : []);
       setProducts(productList);
       setTotal(data.total || productList.length);
       setTotalPages(data.pages || Math.ceil((data.total || productList.length) / ITEMS_PER_PAGE));
