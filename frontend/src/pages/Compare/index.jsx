@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Typography, Box, Button, IconButton, Rating } from '@mui/material';
-import { useCompare } from '../context/CompareContext';
-import { useCart } from '../context/CartContext';
-import { useToast } from '../context/ToastContext';
+import { useCompare } from '../../context/CompareContext';
+import { useCart } from '../../context/CartContext';
+import { useToast } from '../../context/ToastContext';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
