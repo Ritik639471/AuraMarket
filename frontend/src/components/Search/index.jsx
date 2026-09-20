@@ -6,7 +6,7 @@ import { CircularProgress } from '@mui/material';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
-const Search = () => {
+const Search = ({ id = 'site-search' }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -72,8 +72,8 @@ const Search = () => {
     <div ref={searchRef} className="w-full max-w-[540px] h-[46px] bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-100 dark:hover:bg-slate-800 focus-within:bg-white dark:focus-within:bg-slate-900 rounded-full relative px-4 flex items-center border border-slate-200 dark:border-slate-700 focus-within:border-[#ff5252] focus-within:ring-4 focus-within:ring-red-500/10 transition-all duration-200 z-[100] shadow-sm">
       <input
         type="text"
-        id="search"
-        name="search"
+        id={id}
+        name={id}
         placeholder="Search for luxury watches, sneakers, phones..."
         className="w-full h-full pr-11 text-[13.5px] font-medium text-slate-800 dark:text-slate-100 bg-transparent border-none outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500"
         value={query}

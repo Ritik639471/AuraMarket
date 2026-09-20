@@ -96,7 +96,7 @@ const Header = () => {
 
             {/* Desktop / Tablet Search Bar (Center) */}
             <div className="hidden md:flex flex-1 justify-center max-w-[560px] mx-2 relative z-40">
-              <Search />
+              <Search id="search-desktop" />
             </div>
 
             {/* Right Side Actions: Theme Switcher, User Menu & Action Badges */}
@@ -240,7 +240,7 @@ const Header = () => {
 
           {/* Mobile Search Bar Row (renders full-width under logo and action icons on mobile) */}
           <div className="mt-2.5 md:hidden w-full relative z-40">
-            <Search />
+            <Search id="search-mobile" />
           </div>
         </div>
       </div>

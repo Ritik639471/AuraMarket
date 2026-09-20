@@ -38,6 +38,8 @@ const ProductItemListView = ({ product }) => {
             onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
             className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
             alt={product.name}
+            width="262"
+            height="262"
             loading="lazy"
           />
         </div>

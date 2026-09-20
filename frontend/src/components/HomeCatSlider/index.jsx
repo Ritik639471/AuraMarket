@@ -58,6 +58,8 @@ const HomeCatSlider = () => {
                         alt={category.name}
                         onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=200&q=80"; }}
                         className="w-full h-full rounded-full object-cover shadow-sm transition-transform duration-300 ease-in-out group-hover/cat:scale-105"
+                        width="68"
+                        height="68"
                         loading="lazy"
                       />
                     </div>

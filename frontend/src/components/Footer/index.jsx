@@ -117,8 +117,15 @@ const Footer = () => {
                             <h2 className='text-[20px] font-semibold mt-0 mb-4'>Subscribe to Newsletter</h2>
                             <p className="text-[13px] font-medium text-[#6a6464] m-0 mb-4">Subscribe to our latest newsletter to get news about special discounts.</p>
 
-                            <form className='mt-5 flex gap-2'>
-                                <input type="text" className='flex-1 h-[45px] border border-gray-200 outline-none px-4 rounded-md text-[14px] text-gray-900 focus:border-gray-500 transition-colors' placeholder='Enter your email' />
+                            <form className='mt-5 flex gap-2' onSubmit={(e) => e.preventDefault()}>
+                                <input 
+                                    type="email" 
+                                    id="newsletter-email" 
+                                    name="newsletter-email" 
+                                    autoComplete="email" 
+                                    className='flex-1 h-[45px] border border-gray-200 outline-none px-4 rounded-md text-[14px] text-gray-900 focus:border-gray-500 transition-colors' 
+                                    placeholder='Enter your email' 
+                                />
                                 <Button className='text-base px-5 py-[7px] font-medium bg-[#1976d2] hover:bg-[#c00404]' sx={{color: 'white', textTransform: 'none'}} variant="contained">Subscribe</Button>
                             </form>
 

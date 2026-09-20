@@ -135,6 +135,8 @@ const ImageUpload = ({ images = [], onChange, multiple = true, label = "Product 
             >
                 <input
                     type="file"
+                    id="file-upload-input"
+                    name="file-upload-input"
                     ref={fileInputRef}
                     accept="image/*"
                     multiple={multiple}

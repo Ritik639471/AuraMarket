@@ -40,6 +40,8 @@ const ProductItem = ({ product }) => {
           onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
           className="max-h-full max-w-full w-auto h-auto object-contain transition-transform duration-500 ease-out group-hover/card:scale-108 drop-shadow-sm"
           alt={product.name}
+          width="300"
+          height="375"
           loading="lazy"
         />
 

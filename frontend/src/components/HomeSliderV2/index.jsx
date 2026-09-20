@@ -82,6 +82,8 @@ const HomeSliderV2 = ({ featuredProducts = [] }) => {
                   alt={prod.name}
                   onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
                   className="max-h-[160px] sm:max-h-[220px] md:max-h-[300px] max-w-[90%] w-auto h-auto object-contain drop-shadow-sm transition-all duration-500 hover:scale-105"
+                  width="300"
+                  height="300"
                   loading="lazy"
                 />
               </Link>

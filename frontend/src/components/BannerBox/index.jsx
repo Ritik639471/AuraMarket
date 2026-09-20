@@ -34,6 +34,8 @@ const BannerBox = ({ img, link, title, price, info }) => {
               alt={title || "banner"}
               onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
               className="max-h-[145px] max-w-full w-auto h-auto object-contain drop-shadow-sm transition-transform duration-300 group-hover/banner:scale-108"
+              width="180"
+              height="145"
               loading="lazy"
             />
           </div>
@@ -51,6 +53,8 @@ const BannerBox = ({ img, link, title, price, info }) => {
           alt={title || "banner"}
           onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
           className="w-full h-full object-cover group-hover/banner:scale-105 transition-transform duration-300"
+          width="400"
+          height="200"
           loading="lazy"
         />
       </Link>

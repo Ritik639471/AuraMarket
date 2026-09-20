@@ -68,7 +68,7 @@ const ShopkeeperDashboard = () => {
   const handlePromoteSubmit = async () => {
     if (!productToPromote) return;
     try {
-      const res = await fetch(`${API_URL}/api/ads/promote`, {
+      const res = await fetch(`${API_URL}/api/banners/promote`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

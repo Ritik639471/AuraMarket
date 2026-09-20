@@ -35,7 +35,7 @@ const Home = () => {
       .then(data => setCategories(Array.isArray(data) ? data : []))
       .catch(err => console.error('Home Categories Fetch Error:', err));
 
-    fetch(`${API_URL}/api/ads`)
+    fetch(`${API_URL}/api/banners`)
       .then(res => res.json())
       .then(data => setAds(Array.isArray(data) ? data : []))
       .catch(err => console.error('Home Ads Fetch Error:', err));

@@ -34,7 +34,7 @@ const AdminDashboard = () => {
             fetch(`${API_URL}/api/products/all`).then(r => r.json()).then(d => setProducts(Array.isArray(d) ? d : (d.products || [])));
 
             if (tab === 0) {
-                const res = await fetch(`${API_URL}/api/ads`);
+                const res = await fetch(`${API_URL}/api/banners`);
                 const data = await res.json();
                 setAds(Array.isArray(data) ? data : []);
             } else if (tab === 1) {
@@ -69,8 +69,8 @@ const AdminDashboard = () => {
 
     const handleAction = async (e) => {
         e.preventDefault();
-        if (tab === 0) { // Ads
-            const res = await fetch(`${API_URL}/api/ads`, {
+        if (tab === 0) { // Banners
+            const res = await fetch(`${API_URL}/api/banners`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -231,7 +231,7 @@ const AdminDashboard = () => {
                                         <TableCell>{ad.title}</TableCell>
                                         <TableCell>{ad.active ? 'Active' : 'Inactive'}</TableCell>
                                         <TableCell>
-                                            <Button size="small" color="error" onClick={() => handleDelete('ads', ad._id)}>Delete</Button>
+                                            <Button size="small" color="error" onClick={() => handleDelete('banners', ad._id)}>Delete</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}

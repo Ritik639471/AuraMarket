@@ -55,8 +55,8 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/auramarke
 // 6. Application Routes with Cache-Aside Acceleration
 app.use('/api/auth', authRateLimiter, authRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/ads', cacheResponse(60), adRoutes);
+app.use('/api/banners', cacheResponse(60), adRoutes); // Primary adblock-immune route
+app.use('/api/ads', cacheResponse(60), adRoutes); // Legacy fallback route
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/categories', cacheResponse(120), categoryRoutes);
 app.use('/api/upload', uploadRoutes);

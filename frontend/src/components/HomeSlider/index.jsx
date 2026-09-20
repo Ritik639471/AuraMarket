@@ -90,6 +90,8 @@ const HomeSlider = ({ ads = [] }) => {
                       alt={slide.title || "Banner"}
                       onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
                       className='max-h-[160px] sm:max-h-[240px] md:max-h-[320px] max-w-[95%] w-auto h-auto object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:scale-105'
+                      width="500"
+                      height="320"
                       loading="lazy"
                     />
                   </Link>
