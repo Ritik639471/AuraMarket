@@ -2,17 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import InnerImageZoom from "react-inner-image-zoom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import { FALLBACK_IMAGE } from "../ImageUpload";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'react-inner-image-zoom/lib/styles.min.css';
 
 const ProductZoom = ({ images: productImages }) => {
-    const images = productImages && productImages.length > 0 ? productImages : [
-        "https://images.unsplash.com/photo-1517336714468-450583ad716?auto=format&fit=crop&q=80d?auto=format&fit=crop&q=80&w=300",
-        "https://images.unsplash.com/photo-1517336714468-450583ad716?auto=format&fit=crop&q=80d?auto=format&fit=crop&q=80&w=300",
-        "https://images.unsplash.com/photo-1517336714468-450583ad716?auto=format&fit=crop&q=80d?auto=format&fit=crop&q=80&w=300"
-    ];
+    const images = productImages && productImages.length > 0 ? productImages : [FALLBACK_IMAGE];
     const [selectedImage, setSelectedImage] = useState(images[0]);
     const imgk = useRef(null);
 
@@ -40,7 +37,12 @@ const ProductZoom = ({ images: productImages }) => {
                                     imgk.current?.click();
                                 }}
                             >
-                                <img src={img} alt={`product-thumb-${index}`} className="max-w-full max-h-full object-contain" />
+                                <img
+                                    src={img}
+                                    alt={`product-thumb-${index}`}
+                                    onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
+                                    className="max-w-full max-h-full object-contain"
+                                />
                             </div>
                         </SwiperSlide>
                     ))}

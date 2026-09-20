@@ -57,7 +57,8 @@ export const getProducts = async (req, res) => {
             .sort(sortObj)
             .skip((page - 1) * limit)
             .limit(limit)
-            .populate('shopkeeper', 'name email');
+            .populate('shopkeeper', 'name email')
+            .lean();
 
         res.json({ products, total, page, pages: Math.ceil(total / limit) });
     } catch (error) {
@@ -68,7 +69,7 @@ export const getProducts = async (req, res) => {
 // GET /api/products/all — no pagination (for seeding, admin)
 export const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate('shopkeeper', 'name email');
+        const products = await Product.find().populate('shopkeeper', 'name email').lean();
         res.json(products);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -157,7 +158,7 @@ export const searchProducts = async (req, res) => {
                 { subCategory: { $regex: q, $options: 'i' } },
                 { description: { $regex: q, $options: 'i' } }
             ]
-        }).limit(10).populate('shopkeeper', 'name email');
+        }).limit(10).populate('shopkeeper', 'name email').lean();
         res.json(products);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -166,7 +167,10 @@ export const searchProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id).populate('shopkeeper', 'name email').populate('reviews.user', 'name');
+        const product = await Product.findById(req.params.id)
+            .populate('shopkeeper', 'name email')
+            .populate('reviews.user', 'name')
+            .lean();
         if (product) {
             res.json(product);
         } else {

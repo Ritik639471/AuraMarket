@@ -10,7 +10,7 @@ export const WishlistProvider = ({ children }) => {
     const [wishlist, setWishlist] = useState([]);
 
     useEffect(() => {
-        if (user) {
+        if (user && user.token) {
             fetchWishlist();
         } else {
             setWishlist([]);
@@ -18,10 +18,17 @@ export const WishlistProvider = ({ children }) => {
     }, [user]);
 
     const fetchWishlist = async () => {
+        if (!user || !user.token) return;
         try {
             const res = await fetch(`${API_URL}/api/wishlist`, {
                 headers: { 'Authorization': `Bearer ${user.token}` }
             });
+            if (res.status === 401) {
+                // Token expired from DB re-seed
+                localStorage.removeItem('user');
+                setWishlist([]);
+                return;
+            }
             const data = await res.json();
             if (res.ok) setWishlist(data);
         } catch (err) {

@@ -83,9 +83,13 @@ const Checkout = () => {
         setOrderId(data._id || 'ORD' + Date.now());
         clearCart();
         setActiveStep(2);
+      } else {
+        const errData = await res.json();
+        alert(errData.message || 'Failed to place order. Please check item stock.');
       }
     } catch (err) {
       console.error('Order error:', err);
+      alert('Network error while placing order. Please try again.');
     }
     setPlacing(false);
   };

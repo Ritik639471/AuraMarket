@@ -8,7 +8,7 @@ import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { Add, Remove, StarRate } from '@mui/icons-material';
+import { Add, Remove, StarRate, Storefront } from '@mui/icons-material';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
@@ -97,10 +97,18 @@ const ProductDetails = () => {
                 </div>
                 <div className="w-[60%] pt-2.5">
                     <h1 className="text-[32px] font-semibold mb-4">{product.name}</h1>
-                    <div className="flex gap-4 items-center justify-items-center mb-2.5">
-                        <span className="text-[14px] font-light text-gray-500 mb-2.5">
-                            Brands : <span className="font-medium text-black/75">Premium</span>
+                    <div className="flex gap-4 items-center flex-wrap mb-3">
+                        <span className="text-[14px] font-light text-gray-500">
+                            Brand: <span className="font-semibold text-black/80">{product.division || 'Aura Signature'}</span>
                         </span>
+                        {product.shopkeeper && (
+                            <Chip 
+                                icon={<Storefront fontSize="small" sx={{ color: '#2b3445 !important' }} />} 
+                                label={<span>Seller: <strong>{product.shopkeeper.name || 'Verified Merchant'}</strong></span>}
+                                size="small"
+                                sx={{ backgroundColor: '#f4f6f8', fontWeight: 500, fontSize: '0.82rem', border: '1px solid #e1e4ea' }}
+                            />
+                        )}
                         <Rating name="product-rating" value={averageRating} precision={0.5} size="small" readOnly />
                         <span className="text-[13px] text-gray-500">
                             ({product.numReviews || 0} {product.numReviews === 1 ? 'review' : 'reviews'})
@@ -123,13 +131,15 @@ const ProductDetails = () => {
                         <Typography variant="body1" sx={{ fontWeight: 500, mr: 1 }}>Quantity:</Typography>
                         <IconButton size="small" onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={quantity <= 1}><Remove /></IconButton>
                         <Typography sx={{ minWidth: '30px', textAlign: 'center', fontWeight: 600 }}>{quantity}</Typography>
-                        <IconButton size="small" onClick={() => setQuantity(q => q + 1)}><Add /></IconButton>
+                        <IconButton size="small" onClick={() => setQuantity(q => q + 1)} disabled={product.stock !== undefined && quantity >= product.stock}><Add /></IconButton>
                     </Box>
 
                     {product.stock > 0 ? (
-                        <Typography variant="body2" sx={{ color: 'green', fontWeight: 600, mb: 2 }}>In Stock ({product.stock} available)</Typography>
+                        <Typography variant="body2" sx={{ color: product.stock <= 5 ? '#e65100' : '#2e7d32', fontWeight: 600, mb: 2 }}>
+                            {product.stock <= 5 ? `⚠️ Only ${product.stock} left in stock - order soon!` : `✅ In Stock (${product.stock} available)`}
+                        </Typography>
                     ) : (
-                        <Typography variant="body2" sx={{ color: 'red', fontWeight: 600, mb: 2 }}>Out of Stock</Typography>
+                        <Typography variant="body2" sx={{ color: '#d32f2f', fontWeight: 600, mb: 2 }}>❌ Out of Stock</Typography>
                     )}
 
                     <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>

@@ -4,7 +4,27 @@ import Product from '../models/Product.js';
 export const createOrder = async (req, res) => {
     const { items, totalAmount, shippingAddress } = req.body;
     try {
+        // Validate stock and prepare decrements
+        for (const item of items) {
+            const product = await Product.findById(item.product);
+            if (!product) {
+                return res.status(404).json({ message: `Product not found: ${item.product}` });
+            }
+            if (product.stock < item.quantity) {
+                return res.status(400).json({ message: `Insufficient stock for "${product.name}". Available: ${product.stock}` });
+            }
+        }
+
+        // Create the order
         const order = await Order.create({ customer: req.user._id, items, totalAmount, shippingAddress });
+
+        // Decrement product stocks
+        for (const item of items) {
+            await Product.findByIdAndUpdate(item.product, {
+                $inc: { stock: -item.quantity }
+            });
+        }
+
         res.status(201).json(order);
     } catch (error) {
         res.status(500).json({ message: error.message });

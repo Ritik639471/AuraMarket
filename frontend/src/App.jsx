@@ -8,8 +8,7 @@ import { WishlistProvider } from './context/WishlistContext';
 import { CartProvider } from './context/CartContext';
 import { ToastProvider } from './context/ToastContext';
 import { CompareProvider } from './context/CompareContext';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
+import { ThemeProvider } from './context/ThemeContext';
 
 const Home = lazy(() => import('./pages/home'));
 const ProductListing = lazy(() => import('./pages/ProductListing'));
@@ -66,7 +65,7 @@ function AppRoutes() {
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider>
       <AuthProvider>
         <WishlistProvider>
           <CartProvider>

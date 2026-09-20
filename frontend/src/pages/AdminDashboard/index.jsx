@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Tabs, Tab, MenuItem, Select, Chip, IconButton } from '@mui/material';
+import {
+    Container, Typography, Box, Button, Table, TableBody, TableCell, TableHead, TableRow,
+    Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Tabs, Tab,
+    MenuItem, Select, Chip, IconButton, FormControl, InputLabel, Divider, Autocomplete
+} from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import { Campaign, Add, Delete, CheckCircle, Warning, People, ShoppingBag, ListAlt, Category, Close } from '@mui/icons-material';
+import ImageUpload, { FALLBACK_IMAGE } from '../../components/ImageUpload';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
@@ -16,6 +21,7 @@ const AdminDashboard = () => {
     const [open, setOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [selectedEntity, setSelectedEntity] = useState(null);
+    const [productSearch, setProductSearch] = useState('');
     const [newAd, setNewAd] = useState({ title: '', description: '', image: '', link: '' });
     const [editProduct, setEditProduct] = useState({ name: '', description: '', price: '', category: '', image: '', stock: '' });
     const [editCategory, setEditCategory] = useState({ name: '', image: '', subcategories: [] });
@@ -23,12 +29,16 @@ const AdminDashboard = () => {
     const fetchData = async () => {
         if (!user) return;
         try {
+            // Always fetch categories & ALL products in background so selectors in Ad Dialog are fully populated
+            fetch(`${API_URL}/api/categories`).then(r => r.json()).then(d => setCategories(Array.isArray(d) ? d : []));
+            fetch(`${API_URL}/api/products/all`).then(r => r.json()).then(d => setProducts(Array.isArray(d) ? d : (d.products || [])));
+
             if (tab === 0) {
                 const res = await fetch(`${API_URL}/api/ads`);
                 const data = await res.json();
                 setAds(Array.isArray(data) ? data : []);
             } else if (tab === 1) {
-                const res = await fetch(`${API_URL}/api/products`);
+                const res = await fetch(`${API_URL}/api/products/all`);
                 const data = await res.json();
                 setProducts(Array.isArray(data) ? data : (data.products || []));
             } else if (tab === 2) {
@@ -125,7 +135,14 @@ const AdminDashboard = () => {
 
     const handleEditProductClick = (p) => {
         setSelectedEntity(p);
-        setEditProduct({ name: p.name, description: p.description, price: p.price, category: p.category, image: p.image, stock: p.stock });
+        setEditProduct({
+            name: p.name,
+            description: p.description,
+            price: p.price,
+            category: p.category,
+            images: p.images || (p.image ? [p.image] : []),
+            stock: p.stock
+        });
         setEditMode(true);
         setOpen(true);
     };
@@ -224,31 +241,83 @@ const AdminDashboard = () => {
                 )}
 
                 {tab === 1 && (
-                    <Table component={Paper} elevation={3}>
-                        <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
-                            <TableRow>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Price</TableCell>
-                                <TableCell>Stock</TableCell>
-                                <TableCell>Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {products?.map((p) => (
-                                <TableRow key={p._id}>
-                                    <TableCell>{p.name}</TableCell>
-                                    <TableCell>${p.price}</TableCell>
-                                    <TableCell>{p.stock}</TableCell>
-                                    <TableCell>
-                                        <Box sx={{ display: 'flex', gap: 1 }}>
-                                            <Button size="small" onClick={() => handleEditProductClick(p)}>Edit</Button>
-                                            <Button size="small" color="error" onClick={() => handleDelete('products', p._id)}>Delete</Button>
-                                        </Box>
-                                    </TableCell>
+                    <Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5, flexWrap: 'wrap', gap: 2 }}>
+                            <TextField
+                                size="small"
+                                placeholder="Search all products by name, category, or seller..."
+                                value={productSearch}
+                                onChange={(e) => setProductSearch(e.target.value)}
+                                sx={{ width: 380, backgroundColor: '#fff' }}
+                            />
+                            <Chip 
+                                label={`Total: ${products.length} products ${productSearch ? `(Matches: ${products.filter(p => p.name.toLowerCase().includes(productSearch.toLowerCase()) || (p.category && p.category.toLowerCase().includes(productSearch.toLowerCase())) || (p.shopkeeper?.name && p.shopkeeper.name.toLowerCase().includes(productSearch.toLowerCase()))).length})` : ''}`} 
+                                color="primary" 
+                                variant="outlined" 
+                                sx={{ fontWeight: 600 }}
+                            />
+                        </Box>
+                        <Table component={Paper} elevation={3}>
+                            <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
+                                <TableRow>
+                                    <TableCell>Product</TableCell>
+                                    <TableCell>Category</TableCell>
+                                    <TableCell>Seller / Merchant</TableCell>
+                                    <TableCell>Price</TableCell>
+                                    <TableCell>Stock</TableCell>
+                                    <TableCell>Actions</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHead>
+                            <TableBody>
+                                {products
+                                    .filter(p => 
+                                        p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
+                                        (p.category && p.category.toLowerCase().includes(productSearch.toLowerCase())) ||
+                                        (p.shopkeeper?.name && p.shopkeeper.name.toLowerCase().includes(productSearch.toLowerCase()))
+                                    )
+                                    .map((p) => (
+                                        <TableRow key={p._id}>
+                                            <TableCell>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                                    <img
+                                                        src={p.images?.[0] || p.image || FALLBACK_IMAGE}
+                                                        alt={p.name}
+                                                        onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
+                                                        style={{ width: 44, height: 44, objectFit: 'cover', borderRadius: 6, border: '1px solid #eee' }}
+                                                    />
+                                                    <Box>
+                                                        <Typography variant="body2" sx={{ fontWeight: 600 }}>{p.name}</Typography>
+                                                        <Typography variant="caption" color="text.secondary">{p.division || 'Generic'}</Typography>
+                                                    </Box>
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Chip label={p.category || 'General'} size="small" variant="outlined" />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                                    {p.shopkeeper?.name || 'Aura Direct'}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell sx={{ fontWeight: 700, color: '#ff5252' }}>${p.price}</TableCell>
+                                            <TableCell>
+                                                <Chip 
+                                                    label={p.stock > 0 ? `${p.stock} in stock` : 'Out of Stock'} 
+                                                    size="small" 
+                                                    color={p.stock > 10 ? 'success' : p.stock > 0 ? 'warning' : 'error'} 
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <Box sx={{ display: 'flex', gap: 1 }}>
+                                                    <Button size="small" onClick={() => handleEditProductClick(p)}>Edit</Button>
+                                                    <Button size="small" color="error" onClick={() => handleDelete('products', p._id)}>Delete</Button>
+                                                </Box>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                            </TableBody>
+                        </Table>
+                    </Box>
                 )}
 
                 {tab === 2 && (
@@ -362,11 +431,95 @@ const AdminDashboard = () => {
                 <DialogTitle>{tab === 0 ? 'Add New Advertisement' : tab === 4 ? (selectedEntity ? 'Edit Category' : 'Add Category') : 'Edit Product'}</DialogTitle>
                 <DialogContent dividers>
                     {tab === 0 ? (
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-                            <TextField label="Title" fullWidth value={newAd.title} onChange={(e) => setNewAd({ ...newAd, title: e.target.value })} />
-                            <TextField label="Description" fullWidth multiline rows={2} value={newAd.description} onChange={(e) => setNewAd({ ...newAd, description: e.target.value })} />
-                            <TextField label="Image URL" fullWidth value={newAd.image} onChange={(e) => setNewAd({ ...newAd, image: e.target.value })} />
-                            <TextField label="Redirect Link" fullWidth value={newAd.link} onChange={(e) => setNewAd({ ...newAd, link: e.target.value })} />
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
+                            <Typography variant="body2" color="text.secondary">
+                                Link this banner to an existing Product, a Category, or enter a custom link:
+                            </Typography>
+
+                            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                                {/* Category Picker */}
+                                <FormControl fullWidth size="small">
+                                    <InputLabel id="ad-cat-select-label">Choose Category to Link</InputLabel>
+                                    <Select
+                                        labelId="ad-cat-select-label"
+                                        label="Choose Category to Link"
+                                        value=""
+                                        onChange={(e) => {
+                                            const catName = e.target.value;
+                                            const catObj = categories.find(c => c.name === catName);
+                                            setNewAd({
+                                                ...newAd,
+                                                title: newAd.title || `Explore ${catName} Collection`,
+                                                link: `/products?category=${encodeURIComponent(catName)}`,
+                                                image: newAd.image || (catObj?.image || '')
+                                            });
+                                        }}
+                                    >
+                                        {categories.map((c) => (
+                                            <MenuItem key={c._id} value={c.name}>
+                                                {c.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                {/* Product Picker */}
+                                <Autocomplete
+                                    fullWidth
+                                    size="small"
+                                    options={products}
+                                    getOptionLabel={(option) => typeof option === 'string' ? option : `${option.name} — $${option.price} (${option.category})`}
+                                    isOptionEqualToValue={(option, value) => option?._id === value?._id}
+                                    onChange={(event, prod) => {
+                                        if (prod) {
+                                            setNewAd({
+                                                ...newAd,
+                                                title: prod.name,
+                                                description: prod.description?.substring(0, 100) + '...',
+                                                link: `/product/${prod._id}`,
+                                                image: prod.images?.[0] || prod.image || ''
+                                            });
+                                        }
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField 
+                                            {...params} 
+                                            label={`Search & Link from All Products (${products.length} Available)`}
+                                            placeholder="Type product name or category..."
+                                        />
+                                    )}
+                                />
+                            </Box>
+
+                            <Divider sx={{ my: 0.5 }} />
+
+                            <TextField
+                                label="Banner Title *"
+                                fullWidth
+                                value={newAd.title}
+                                onChange={(e) => setNewAd({ ...newAd, title: e.target.value })}
+                            />
+                            <TextField
+                                label="Subtitle / Description"
+                                fullWidth
+                                multiline
+                                rows={2}
+                                value={newAd.description}
+                                onChange={(e) => setNewAd({ ...newAd, description: e.target.value })}
+                            />
+                            <ImageUpload
+                                images={newAd.image}
+                                onChange={(url) => setNewAd({ ...newAd, image: Array.isArray(url) ? url[0] : url })}
+                                multiple={false}
+                                label="Banner Image *"
+                            />
+                            <TextField
+                                label="Redirect URL / Route *"
+                                fullWidth
+                                placeholder="/products?category=Electronics or /product/ID"
+                                value={newAd.link}
+                                onChange={(e) => setNewAd({ ...newAd, link: e.target.value })}
+                            />
                         </Box>
                     ) : tab === 1 ? (
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
@@ -374,13 +527,23 @@ const AdminDashboard = () => {
                             <TextField label="Description" fullWidth multiline rows={3} value={editProduct.description} onChange={(e) => setEditProduct({ ...editProduct, description: e.target.value })} />
                             <TextField label="Price" type="number" fullWidth value={editProduct.price} onChange={(e) => setEditProduct({ ...editProduct, price: e.target.value })} />
                             <TextField label="Category" fullWidth value={editProduct.category} onChange={(e) => setEditProduct({ ...editProduct, category: e.target.value })} />
-                            <TextField label="Image URL" fullWidth value={editProduct.image} onChange={(e) => setEditProduct({ ...editProduct, image: e.target.value })} />
+                            <ImageUpload
+                                images={editProduct.images || editProduct.image}
+                                onChange={(imgs) => setEditProduct({ ...editProduct, images: imgs, image: Array.isArray(imgs) ? imgs[0] : imgs })}
+                                multiple={true}
+                                label="Product Images"
+                            />
                             <TextField label="Stock" type="number" fullWidth value={editProduct.stock} onChange={(e) => setEditProduct({ ...editProduct, stock: e.target.value })} />
                         </Box>
                     ) : tab === 4 ? (
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
                             <TextField label="Category Name" fullWidth value={editCategory.name} onChange={(e) => setEditCategory({ ...editCategory, name: e.target.value })} />
-                            <TextField label="Image URL" fullWidth value={editCategory.image} onChange={(e) => setEditCategory({ ...editCategory, image: e.target.value })} />
+                            <ImageUpload
+                                images={editCategory.image}
+                                onChange={(url) => setEditCategory({ ...editCategory, image: Array.isArray(url) ? url[0] : url })}
+                                multiple={false}
+                                label="Category Icon/Image"
+                            />
                             
                             <Box sx={{ mt: 2 }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>

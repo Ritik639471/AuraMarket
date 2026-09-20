@@ -10,11 +10,18 @@ export const CartProvider = ({ children }) => {
     const { user } = useAuth();
 
     useEffect(() => {
-        if (user) {
+        if (user && user.token) {
             fetch(`${API_URL}/api/auth/cart`, {
                 headers: { 'Authorization': `Bearer ${user.token}` }
             })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status === 401) {
+                    localStorage.removeItem('user');
+                    setCart([]);
+                    return null;
+                }
+                return res.json();
+            })
             .then(data => { if (Array.isArray(data)) setCart(data); })
             .catch(err => console.error('Cart Fetch Error:', err));
         } else {

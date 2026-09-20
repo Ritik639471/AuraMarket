@@ -10,6 +10,7 @@ import { useWishlist } from "../../context/WishlistContext";
 import { useCart } from "../../context/CartContext";
 import { useCompare } from "../../context/CompareContext";
 import QuickViewModal from "../QuickViewModal";
+import { FALLBACK_IMAGE } from "../ImageUpload";
 
 const ProductItemListView = ({ product }) => {
   const [quickViewOpen, setQuickViewOpen] = React.useState(false);
@@ -20,25 +21,27 @@ const ProductItemListView = ({ product }) => {
 
   const isInWishlist = wishlist.some(item => (item._id || item) === product._id);
   const isInCompare = compareList.some(item => (item._id || item) === product._id);
+  const isOutOfStock = product.stock !== undefined && product.stock <= 0;
+  const ratingValue = product.rating || (product.reviews?.length ? product.reviews.reduce((a, b) => a + b.rating, 0) / product.reviews.length : 0);
 
   const navigate = useNavigate();
 
   return (
     <div
-      className="shadow-[0_4px_10px_rgba(0,0,0,0.15)] rounded-lg overflow-hidden transition-all duration-300 ease-in-out bg-white flex group/item cursor-pointer"
+      className="shadow-[0_4px_10px_rgba(0,0,0,0.08)] rounded-xl overflow-hidden transition-all duration-300 ease-in-out bg-white flex group/item cursor-pointer border border-slate-100 hover:border-red-200"
       onClick={() => navigate(`/product/${product._id}`)}
     >
-      <div className="w-[36%] relative rounded-l-lg overflow-hidden group/img bg-gray-100 flex items-center justify-center">
+      <div className="w-[36%] relative rounded-l-lg overflow-hidden group/img bg-slate-50 flex items-center justify-center">
         <div className="block h-[262px] w-full relative overflow-hidden">
           <img
-            src={product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/262x262?text=No+Image'}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-105"
+            src={product.images && product.images.length > 0 ? product.images[0] : FALLBACK_IMAGE}
+            onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
             alt={product.name}
             loading="lazy"
-            decoding="async"
           />
         </div>
-        <span className="absolute top-[10px] left-[10px] bg-[#ff5252] text-white py-[5px] px-[10px] text-[12px] font-medium rounded-md z-10">New</span>
+        <span className="absolute top-[10px] left-[10px] bg-[#ff5252] text-white py-[4px] px-[10px] text-[11px] font-bold uppercase rounded-md z-10">New</span>
 
         <div className="absolute -top-[200px] right-[5px] flex flex-col gap-2 transition-all duration-300 opacity-0 z-10 group-hover/img:top-[15px] group-hover/img:opacity-100">
           <Button
@@ -75,17 +78,23 @@ const ProductItemListView = ({ product }) => {
         <h3 style={{ fontSize: '14px', fontWeight: '400', color: 'rgba(15, 14, 14, 0.67)' }}>
           {product.description}
         </h3>
-        <Rating name="size-medium" defaultValue={4} size="small" readOnly sx={{ mt: 1 }} />
-        <div className="flex items-center gap-[10px] mt-[5px]">
-          <span className="text-[#ff5252] text-[20px] font-semibold ml-[15px]">${product.price}</span>
+        <div className="flex items-center gap-1.5 mt-1.5">
+          <Rating name="size-medium" value={ratingValue} precision={0.5} size="small" readOnly />
+          <span className="text-[12px] font-medium text-slate-400">
+            {ratingValue > 0 ? ratingValue.toFixed(1) : ''} ({product.numReviews || product.reviews?.length || 0})
+          </span>
+        </div>
+        <div className="flex items-center gap-[10px] mt-2">
+          <span className="text-[#ff5252] text-[20px] font-bold">${product.price}</span>
         </div>
 
         <Button
           className="!mt-4 !bg-[#ff5252] hover:!bg-[#e34e4e] !text-white !font-bold !py-2 !px-4 !rounded-lg !w-fit"
+          disabled={isOutOfStock}
           onClick={(e) => { e.stopPropagation(); addToCart(product); }}
         >
-          <BsCart3 className="text-[22px] font-bold mr-2" />
-          Add To Cart
+          <BsCart3 className="text-[20px] font-bold mr-2" />
+          {isOutOfStock ? 'Sold Out' : 'Add To Cart'}
         </Button>
         {quickViewOpen && <QuickViewModal open={quickViewOpen} handleClose={() => setQuickViewOpen(false)} product={product} />}
       </div>

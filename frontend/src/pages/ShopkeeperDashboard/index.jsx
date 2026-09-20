@@ -6,7 +6,11 @@ import {
   MenuItem, FormControl, InputLabel
 } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
-import { ShoppingBag, Receipt, Add, LocalShipping, DoneAll, TrendingUp, Inventory, AttachMoney, HourglassEmpty } from '@mui/icons-material';
+import {
+  ShoppingBag, Receipt, AttachMoney, HourglassEmpty, Add,
+  Edit, Delete, CheckCircle, LocalShipping, DoneAll, Inventory, Campaign
+} from '@mui/icons-material';
+import ImageUpload, { FALLBACK_IMAGE } from '../../components/ImageUpload';
 import { useToast } from '../../context/ToastContext';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
@@ -42,6 +46,8 @@ const ShopkeeperDashboard = () => {
     name: '', description: '', price: '', category: '', subCategory: '',
     division: '', images: '', stock: ''
   });
+  const [promoteOpen, setPromoteOpen] = useState(false);
+  const [productToPromote, setProductToPromote] = useState(null);
 
   const fetchProducts = () => {
     fetch(`${API_URL}/api/products/shopkeeper`, {
@@ -59,8 +65,37 @@ const ShopkeeperDashboard = () => {
     if (user) { fetchProducts(); fetchOrders(); }
   }, [user]);
 
-  // Computed stats
-  const totalRevenue = orders.filter(o => o.status === 'Delivered').reduce((acc, o) => acc + o.totalAmount, 0);
+  const handlePromoteSubmit = async () => {
+    if (!productToPromote) return;
+    try {
+      const res = await fetch(`${API_URL}/api/ads/promote`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+        body: JSON.stringify({
+          title: `Featured: ${productToPromote.name}`,
+          description: productToPromote.description,
+          image: productToPromote.images?.[0] || productToPromote.image || '',
+          link: `/product/${productToPromote._id}`
+        })
+      });
+      if (res.ok) {
+        showToast('🎉 Payment successful! Your ad is now live on the homepage!', 'success');
+        setPromoteOpen(false);
+        setProductToPromote(null);
+      } else {
+        const errorData = await res.json();
+        showToast(`Failed to submit promotion request: ${errorData.message || 'Unknown error'}`, 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Error submitting promotion request', 'error');
+    }
+  };
+
+  const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
   const pendingOrders = orders.filter(o => o.status === 'Pending').length;
 
   const handleSaveProduct = async (e) => {
@@ -76,7 +111,7 @@ const ShopkeeperDashboard = () => {
       setOpen(false);
       setEditMode(false);
       setSelectedProduct(null);
-      setNewProduct({ name: '', description: '', price: '', category: '', subCategory: '', division: '', images: '', stock: '' });
+      setNewProduct({ name: '', description: '', price: '', category: '', subCategory: '', division: '', images: [], stock: '' });
       fetchProducts();
       showToast(editMode ? '✅ Product updated!' : '✅ Product added!');
     }
@@ -95,7 +130,8 @@ const ShopkeeperDashboard = () => {
     setNewProduct({
       name: p.name, description: p.description, price: p.price,
       category: p.category, subCategory: p.subCategory || '', division: p.division || '',
-      images: p.images ? p.images.join(', ') : '', stock: p.stock
+      images: Array.isArray(p.images) ? p.images : (p.images ? [p.images] : []),
+      stock: p.stock
     });
     setEditMode(true);
     setOpen(true);
@@ -133,7 +169,7 @@ const ShopkeeperDashboard = () => {
             {tab === 0 && (
               <Box>
                 <Button variant="contained" startIcon={<Add />}
-                  onClick={() => { setEditMode(false); setNewProduct({ name: '', description: '', price: '', category: '', subCategory: '', division: '', images: '', stock: '' }); setOpen(true); }}
+                  onClick={() => { setEditMode(false); setNewProduct({ name: '', description: '', price: '', category: '', subCategory: '', division: '', images: [], stock: '' }); setOpen(true); }}
                   sx={{ mb: 3, borderRadius: '10px', px: 4, backgroundColor: '#ff5252', '&:hover': { backgroundColor: '#e34e4e' } }}>
                   Add New Product
                 </Button>
@@ -152,7 +188,12 @@ const ShopkeeperDashboard = () => {
                       <TableRow key={p._id} hover>
                         <TableCell>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 8 }} />}
+                            <img
+                              src={p.images?.[0] || FALLBACK_IMAGE}
+                              alt={p.name}
+                              onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
+                              style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 8, border: '1px solid #eee' }}
+                            />
                             <Typography variant="body2" sx={{ fontWeight: 600 }}>{p.name}</Typography>
                           </Box>
                         </TableCell>
@@ -168,6 +209,7 @@ const ShopkeeperDashboard = () => {
                         </TableCell>
                         <TableCell>
                           <Box sx={{ display: 'flex', gap: 1 }}>
+                            <Button size="small" variant="outlined" startIcon={<Campaign />} color="secondary" onClick={() => { setProductToPromote(p); setPromoteOpen(true); }}>Promote</Button>
                             <Button size="small" variant="outlined" onClick={() => handleEditClick(p)}>Edit</Button>
                             <Button size="small" variant="outlined" color="error" onClick={() => handleDeleteProduct(p._id)}>Delete</Button>
                           </Box>
@@ -259,15 +301,43 @@ const ShopkeeperDashboard = () => {
                 <TextField id="prod-div" label="Division" fullWidth value={newProduct.division} onChange={e => setNewProduct({ ...newProduct, division: e.target.value })} />
               </Grid>
             </Grid>
-            <TextField id="prod-images" label="Image URLs (comma separated)" fullWidth multiline rows={2}
-              placeholder="https://..., https://..."
-              value={newProduct.images} onChange={e => setNewProduct({ ...newProduct, images: e.target.value })} />
+            <ImageUpload
+              images={newProduct.images}
+              onChange={(updatedImages) => setNewProduct({ ...newProduct, images: updatedImages })}
+              multiple={true}
+              label="Product Images"
+            />
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
           <Button onClick={handleSaveProduct} variant="contained" sx={{ backgroundColor: '#ff5252', '&:hover': { backgroundColor: '#e34e4e' } }}>
             {editMode ? 'Update Product' : 'Add Product'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Ad Promotion Dialog */}
+      <Dialog open={promoteOpen} onClose={() => setPromoteOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ fontWeight: 700 }}>Promote Product</DialogTitle>
+        <DialogContent dividers>
+          <Box sx={{ textAlign: 'center', py: 2 }}>
+            <Campaign color="secondary" sx={{ fontSize: 60, mb: 2 }} />
+            <Typography variant="h6" gutterBottom>
+              Want to feature <strong>{productToPromote?.name}</strong> on the homepage?
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+              Reach thousands of shoppers by placing this product in the featured carousel.
+            </Typography>
+            <Paper elevation={0} sx={{ p: 3, backgroundColor: '#fff5f5', border: '1px solid #ffcdd2', borderRadius: 2, display: 'inline-block' }}>
+              <Typography variant="h4" sx={{ fontWeight: 800, color: '#ff5252' }}>$5.00 <span style={{ fontSize: '1rem', fontWeight: 500 }}>/ day</span></Typography>
+            </Paper>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button onClick={() => setPromoteOpen(false)} sx={{ color: '#888' }}>Cancel</Button>
+          <Button onClick={handlePromoteSubmit} variant="contained" sx={{ backgroundColor: '#ff5252', '&:hover': { backgroundColor: '#e34e4e' }, fontWeight: 600 }}>
+            Pay & Submit Request
           </Button>
         </DialogActions>
       </Dialog>

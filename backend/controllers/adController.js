@@ -2,7 +2,8 @@ import Ad from '../models/Ad.js';
 
 export const getAds = async (req, res) => {
     try {
-        const ads = await Ad.find({ active: true });
+        const query = req.query.all === 'true' ? {} : { active: true };
+        const ads = await Ad.find(query).sort({ createdAt: -1 });
         res.json(ads);
     } catch (error) {
         res.status(500).json({ message: error.message, stack: error.stack });
@@ -46,6 +47,25 @@ export const updateAd = async (req, res) => {
         } else {
             res.status(404).json({ message: 'Ad not found' });
         }
+    } catch (error) {
+        res.status(500).json({ message: error.message, stack: error.stack });
+    }
+};
+
+export const promoteAd = async (req, res) => {
+    try {
+        const { title, description, image, link } = req.body;
+        // When shopkeeper pays for ad promotion, activate it immediately so it appears in the live ad list
+        const newAd = await Ad.create({
+            title,
+            description,
+            image,
+            link,
+            status: 'approved',
+            active: true,
+            shopkeeper: req.user._id
+        });
+        res.status(201).json({ message: 'Ad payment confirmed and promotion activated', ad: newAd });
     } catch (error) {
         res.status(500).json({ message: error.message, stack: error.stack });
     }

@@ -24,4 +24,10 @@ const productSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
+// Performance: Database compound indexes for high-throughput filtering and sorting
+productSchema.index({ category: 1, createdAt: -1 });
+productSchema.index({ price: 1 });
+productSchema.index({ shopkeeper: 1, createdAt: -1 });
+productSchema.index({ name: 'text', description: 'text' });
+
 export default mongoose.model('Product', productSchema);

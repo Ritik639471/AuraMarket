@@ -22,4 +22,8 @@ const orderSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
+// Performance: Indexes for fast customer order lookup and admin status filtering
+orderSchema.index({ customer: 1, createdAt: -1 });
+orderSchema.index({ status: 1 });
+
 export default mongoose.model('Order', orderSchema);

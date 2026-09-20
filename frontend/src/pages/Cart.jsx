@@ -36,21 +36,35 @@ const Cart = () => {
                     <Grid container spacing={4}>
                         <Grid item xs={12} md={8}>
                             {cart.map((item) => (
-                                <Paper key={item.product._id} elevation={1} sx={{ p: 2, mb: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-                                    <Box sx={{ width: 100, height: 100, borderRadius: '8px', overflow: 'hidden' }}>
-                                        <img src={item.product.images?.[0] || 'https://via.placeholder.com/100'} alt={item.product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <Paper key={item.product._id} elevation={1} sx={{ p: 2, mb: 2, display: 'flex', alignItems: 'center', gap: 2, borderRadius: '14px' }}>
+                                    <Box sx={{ width: 100, height: 100, borderRadius: '10px', overflow: 'hidden', flexShrink: 0 }}>
+                                        <img
+                                            src={item.product.images?.[0] || 'https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&q=80&w=600'}
+                                            alt={item.product.name}
+                                            onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&q=80&w=600'; }}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
                                     </Box>
                                     <Box sx={{ flexGrow: 1 }}>
-                                        <Typography variant="h6">{item.product.name}</Typography>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{item.product.name}</Typography>
                                         <Typography variant="body2" color="text.secondary">{item.product.category}</Typography>
-                                        <Typography variant="h6" color="primary">${item.product.price}</Typography>
+                                        <Typography variant="h6" sx={{ color: '#ff5252', fontWeight: 700 }}>${item.product.price}</Typography>
+                                        {item.product.stock !== undefined && (
+                                            <Typography variant="caption" sx={{ color: item.product.stock <= 5 ? 'orange' : 'text.secondary' }}>
+                                                {item.product.stock <= 5 ? `Only ${item.product.stock} left in stock` : `In Stock`}
+                                            </Typography>
+                                        )}
                                     </Box>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                         <IconButton size="small" onClick={() => updateQuantity(item.product._id, item.quantity - 1)} disabled={item.quantity <= 1}>
                                             <Remove />
                                         </IconButton>
-                                        <Typography>{item.quantity}</Typography>
-                                        <IconButton size="small" onClick={() => updateQuantity(item.product._id, item.quantity + 1)}>
+                                        <Typography sx={{ fontWeight: 600, minWidth: 20, textAlign: 'center' }}>{item.quantity}</Typography>
+                                        <IconButton
+                                            size="small"
+                                            onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
+                                            disabled={item.product.stock !== undefined && item.quantity >= item.product.stock}
+                                        >
                                             <Add />
                                         </IconButton>
                                     </Box>
