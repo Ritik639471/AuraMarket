@@ -52,13 +52,19 @@ const ShopkeeperDashboard = () => {
   const fetchProducts = () => {
     fetch(`${API_URL}/api/products/shopkeeper`, {
       headers: { 'Authorization': `Bearer ${user.token}` }
-    }).then(res => res.json()).then(data => setProducts(Array.isArray(data) ? data : []));
+    })
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setProducts(Array.isArray(data) ? data : []))
+      .catch(err => console.error("Error fetching products:", err));
   };
 
   const fetchOrders = () => {
     fetch(`${API_URL}/api/orders/shopkeeper`, {
       headers: { 'Authorization': `Bearer ${user.token}` }
-    }).then(res => res.json()).then(data => setOrders(Array.isArray(data) ? data : []));
+    })
+      .then(res => res.ok ? res.json() : [])
+      .then(data => setOrders(Array.isArray(data) ? data : []))
+      .catch(err => console.error("Error fetching orders:", err));
   };
 
   useEffect(() => {
