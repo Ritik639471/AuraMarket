@@ -6,7 +6,7 @@ export const getAds = async (req, res) => {
         const ads = await Ad.find(query).sort({ createdAt: -1 });
         res.json(ads);
     } catch (error) {
-        res.status(500).json({ message: error.message, stack: error.stack });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -15,7 +15,7 @@ export const createAd = async (req, res) => {
         const ad = await Ad.create(req.body);
         res.status(201).json(ad);
     } catch (error) {
-        res.status(500).json({ message: error.message, stack: error.stack });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -29,7 +29,7 @@ export const deleteAd = async (req, res) => {
             res.status(404).json({ message: 'Ad not found' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message, stack: error.stack });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -48,7 +48,7 @@ export const updateAd = async (req, res) => {
             res.status(404).json({ message: 'Ad not found' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message, stack: error.stack });
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -67,6 +67,6 @@ export const promoteAd = async (req, res) => {
         });
         res.status(201).json({ message: 'Ad payment confirmed and promotion activated', ad: newAd });
     } catch (error) {
-        res.status(500).json({ message: error.message, stack: error.stack });
+        res.status(500).json({ message: error.message });
     }
 };

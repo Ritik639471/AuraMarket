@@ -1,7 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+import { API_URL } from '../config.js';
+
 
 const WishlistContext = createContext();
 
@@ -18,7 +19,6 @@ export const WishlistProvider = ({ children }) => {
     }, [user]);
 
     const fetchWishlist = async () => {
-        if (!user || !user.token) return;
         try {
             const res = await fetch(`${API_URL}/api/wishlist`, {
                 headers: { 'Authorization': `Bearer ${user.token}` }
@@ -61,7 +61,7 @@ export const WishlistProvider = ({ children }) => {
     };
 
     return (
-        <WishlistContext.Provider value={{ wishlist, toggleWishlist, fetchWishlist }}>
+        <WishlistContext.Provider value={{ wishlist, toggleWishlist }}>
             {children}
         </WishlistContext.Provider>
     );

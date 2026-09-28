@@ -23,8 +23,17 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dns.setServers(['8.8.8.8', '8.8.4.4']);
 dotenv.config();
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
+// Startup validation — crash early if critical env vars are missing
+if (!process.env.JWT_SECRET) {
+    console.error('FATAL: JWT_SECRET is not set in environment variables!');
+    process.exit(1);
+}
+if (!process.env.MONGODB_URI) {
+    console.warn('WARNING: MONGODB_URI not set. Falling back to local MongoDB.');
+}
 
 const app = express();
 
@@ -55,7 +64,7 @@ app.use(cors({
         ) {
             return callback(null, true);
         }
-        return callback(null, true);
+        return callback(new Error('Not allowed by CORS'));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -81,7 +90,7 @@ app.use('/api/banners', cacheResponse(60), adRoutes); // Primary adblock-immune 
 app.use('/api/ads', cacheResponse(60), adRoutes); // Legacy fallback route
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/categories', cacheResponse(120), categoryRoutes);
-app.use('/api/upload', uploadRoutes);
+app.use('/api/upload', apiRateLimiter, uploadRoutes);
 
 // 7. Production DevOps Health & Metrics Endpoint
 app.get('/api/health', (req, res) => {
@@ -105,7 +114,16 @@ app.get('/', (req, res) => {
     res.send('AuraMarket High-Performance E-Commerce API is running...');
 });
 
-// 8. Centralized Production Safe Error Handler
+// 8. 404 Handler for unmatched API routes
+app.use('/api/*', (req, res) => {
+    res.status(404).json({
+        success: false,
+        error: 'NotFound',
+        message: `Route ${req.method} ${req.originalUrl} not found`
+    });
+});
+
+// 9. Centralized Production Safe Error Handler
 app.use((err, req, res, next) => {
     console.error('Unhandled API Error:', err);
     const statusCode = err.status || err.statusCode || 500;

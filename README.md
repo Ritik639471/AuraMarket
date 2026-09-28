@@ -4,6 +4,8 @@
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=10b981&height=180&section=header&text=AuraMarket&fontSize=50&fontColor=ffffff&fontAlignY=40&desc=Full-Stack%20E-Commerce%20%E2%80%A2%20Multi-Role%20RBAC%20%E2%80%A2%20Shopkeeper%20%E2%80%A2%20Admin&descAlignY=62&descSize=18" width="100%"/>
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://marketaura.netlify.app)
+[![Backend API](https://img.shields.io/badge/Backend%20API-AWS_EC2-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white)](https://ritik-shop.duckdns.org/api/health)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ritik639471/AuraMarket)
 
 <br/>
@@ -15,6 +17,9 @@
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Express 5](https://img.shields.io/badge/Express%205-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB%20Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![AWS EC2](https://img.shields.io/badge/AWS_EC2-232F3E?style=flat-square&logo=amazonwebservices&logoColor=white)](https://aws.amazon.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Nginx](https://img.shields.io/badge/Nginx-009639?style=flat-square&logo=nginx&logoColor=white)](https://nginx.org/)
 [![JWT](https://img.shields.io/badge/JWT-Auth-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
 
 **A comprehensive, production-ready MERN e-commerce application engineered with React 19, Express 5, MongoDB, and Tailwind CSS v4, supporting dynamic vendor marketplaces, multi-role RBAC, interactive zoom, comparisons, and full checkout pipelines.**
@@ -197,7 +202,7 @@ Configure this variable in your local `frontend/.env` file or in your **Netlify 
 
 | Variable | Required | Default | Description |
 |:---|:---:|:---:|:---|
-| `VITE_API_URL` | Optional | `''` *(empty string)* | The base URL of the backend API. When empty, Vite proxies `/api` to `localhost:5000`. In production, set to your Render backend URL (e.g. `https://auramarket-api.onrender.com` without a trailing slash). |
+| `VITE_API_URL` | Optional | `''` *(empty string)* | The base URL of the backend API. When empty, Vite proxies `/api` to `localhost:5000`. In production, set to your AWS EC2 backend URL (`https://ritik-shop.duckdns.org` without a trailing slash). |
 
 #### Example `frontend/.env`:
 ```env
@@ -205,7 +210,7 @@ Configure this variable in your local `frontend/.env` file or in your **Netlify 
 VITE_API_URL=http://localhost:5000
 
 # In production (set in Netlify dashboard):
-# VITE_API_URL=https://your-backend.onrender.com
+# VITE_API_URL=https://ritik-shop.duckdns.org
 ```
 
 ---
@@ -253,15 +258,10 @@ npm run dev
 
 ## ☁️ Production Deployment (Render & Netlify)
 
-### 1. Backend on Render
-1. Create a new **Web Service** on [Render](https://dashboard.render.com/) and connect your GitHub repository.
-2. Set the following build settings:
-   - **Root Directory:** `backend`
-   - **Build Command:** `npm install`
-   - **Start Command:** `node server.js`
-3. In the **Environment** tab, add your production environment variables (`NODE_ENV=production`, `PORT=5000`, `MONGODB_URI`, `JWT_SECRET`, `CLOUDINARY_*`).
-4. Ensure your MongoDB Atlas cluster has `0.0.0.0/0` in its IP Access List so Render's cloud servers can connect.
-5. Deploy and copy your Render URL (e.g., `https://auramarket-api.onrender.com`).
+### 1. Backend on AWS EC2 (Docker Compose + Nginx + SSL)
+1. Containerized via Docker and hosted on an **AWS EC2 Ubuntu Instance** running 24/7 with zero cold starts.
+2. Reverse-proxied via **Nginx** with automated TLS certificates by **Let's Encrypt / Certbot**.
+3. Live Public API: `https://ritik-shop.duckdns.org`
 
 ### 2. Frontend on Netlify
 1. Create a new site on [Netlify](https://app.netlify.com/) from your GitHub repository.
@@ -270,7 +270,7 @@ npm run dev
    - **Build command:** `npm run build` *(auto-configured via `netlify.toml`)*
    - **Publish directory:** `dist` *(auto-configured via `netlify.toml`)*
 3. In **Site configuration → Environment variables**, add:
-   - `VITE_API_URL` = `https://your-backend.onrender.com` *(without trailing slash)*
+   - `VITE_API_URL` = `https://ritik-shop.duckdns.org`
 4. Deploy the site. SPA client-side routing is handled automatically by `netlify.toml` so refreshing any route works without 404s.
 
 ---

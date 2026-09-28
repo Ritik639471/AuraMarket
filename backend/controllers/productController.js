@@ -117,8 +117,10 @@ export const updateProduct = async (req, res) => {
 
             const updatedProduct = await product.save();
             res.json(updatedProduct);
+        } else if (product) {
+            res.status(403).json({ message: 'Not authorized to edit this product' });
         } else {
-            res.status(404).json({ message: 'Product not found or not authorized' });
+            res.status(404).json({ message: 'Product not found' });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -131,8 +133,10 @@ export const deleteProduct = async (req, res) => {
         if (product && (product.shopkeeper.toString() === req.user._id.toString() || req.user.role === 'admin')) {
             await product.deleteOne();
             res.json({ message: 'Product removed' });
+        } else if (product) {
+            res.status(403).json({ message: 'Not authorized to delete this product' });
         } else {
-            res.status(404).json({ message: 'Product not found or not authorized' });
+            res.status(404).json({ message: 'Product not found' });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -151,19 +155,38 @@ export const getShopkeeperProducts = async (req, res) => {
 export const searchProducts = async (req, res) => {
     const { q } = req.query;
     try {
-        const products = await Product.find({
+        if (!q || q.trim().length === 0) return res.json([]);
+
+        // Use the MongoDB text index (name + description) for fast indexed search.
+        // Falls back to regex for category/subCategory which aren't in the text index.
+        const textResults = await Product.find(
+            { $text: { $search: q } },
+            { score: { $meta: 'textScore' } }
+        )
+        .sort({ score: { $meta: 'textScore' } })
+        .limit(10)
+        .populate('shopkeeper', 'name email')
+        .lean();
+
+        // If text index has no results (e.g. short words), fall back to regex
+        if (textResults.length > 0) {
+            return res.json(textResults);
+        }
+
+        const regexResults = await Product.find({
             $or: [
                 { name: { $regex: q, $options: 'i' } },
                 { category: { $regex: q, $options: 'i' } },
                 { subCategory: { $regex: q, $options: 'i' } },
-                { description: { $regex: q, $options: 'i' } }
+                { division: { $regex: q, $options: 'i' } }
             ]
         }).limit(10).populate('shopkeeper', 'name email').lean();
-        res.json(products);
+        res.json(regexResults);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 export const getProductById = async (req, res) => {
     try {

@@ -1,7 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 
-const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET || 'secret', { expiresIn: '30d' });
+const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
 export const registerUser = async (req, res) => {
     const { name, email, password, role } = req.body;
@@ -87,7 +87,7 @@ export const updateProfile = async (req, res) => {
         res.json({
             _id: user._id, name: user.name, email: user.email, role: user.role,
             phone: user.phone, address: user.address,
-            token: req.headers.authorization.split(' ')[1]
+            token: generateToken(user._id)
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

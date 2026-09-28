@@ -9,7 +9,8 @@ import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 import { Link } from 'react-router-dom';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+import { API_URL } from '../config.js';
+
 
 const ORDER_STEPS = ['Pending', 'Shipped', 'Delivered'];
 
