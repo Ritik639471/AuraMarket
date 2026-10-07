@@ -114,13 +114,16 @@ app.get('/', (req, res) => {
     res.send('AuraMarket High-Performance E-Commerce API is running...');
 });
 
-// 8. 404 Handler for unmatched API routes
-app.use('/api/*', (req, res) => {
-    res.status(404).json({
-        success: false,
-        error: 'NotFound',
-        message: `Route ${req.method} ${req.originalUrl} not found`
-    });
+// 8. 404 Handler for unmatched API routes (Express 5 compatible)
+app.use((req, res, next) => {
+    if (req.originalUrl.startsWith('/api')) {
+        return res.status(404).json({
+            success: false,
+            error: 'NotFound',
+            message: `Route ${req.method} ${req.originalUrl} not found`
+        });
+    }
+    next();
 });
 
 // 9. Centralized Production Safe Error Handler

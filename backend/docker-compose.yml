@@ -1,3 +1,5 @@
+name: auramarket
+
 services:
   auramarket:
     build:
